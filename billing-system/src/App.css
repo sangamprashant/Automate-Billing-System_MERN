@@ -1,0 +1,17 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(to right, #f2fcff, #ffdde2, #d1ddff);
+}
+
+.bg-lucent {
+  background-color: rgba(69, 69, 69, 0.085);
+}
