@@ -15,7 +15,11 @@
   width: 45%;
 }
 
-.bg-ui{
+.payment-section {
+  width: 55%;
+}
+
+.bg-ui {
   background-color: rgb(234, 245, 254);
 }
 
@@ -25,12 +29,12 @@
   border-spacing: 20px 0px;
 }
 
-.box-cell-top{
+.box-cell-top {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
 
-.box-cell-bottom{
+.box-cell-bottom {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }

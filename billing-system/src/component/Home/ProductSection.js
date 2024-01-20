@@ -3,10 +3,18 @@ import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { SearchOutlined } from "@ant-design/icons";
-import React from "react";
+import React, { useContext } from "react";
+import { AppContext } from "../../AppContext";
 const { Meta } = Card;
 
 function ProductSection() {
+  const { isLogged, setIsLogged, goToPayment, setGoToPayment } =
+    useContext(AppContext);
+  console.log(goToPayment);
+  const handelGoToPayment = () => {
+    console.log("pay button is Clicked");
+    setGoToPayment(true);
+  };
   // Sample array of data for cards
   const cardData = [
     {
@@ -206,8 +214,13 @@ function ProductSection() {
 
       {/* South Section */}
       <div className="south-section py-2 d-flex justify-content-between align-items-center px-5 ">
-        <Button shape="round" icon={<SouthIcon />} size="large"   type="primary" />
-        <Tooltip title="Payment">
+        <Button
+          shape="round"
+          icon={<SouthIcon />}
+          size="large"
+          type="primary"
+        />
+        <Tooltip title="Payment" onClick={handelGoToPayment}>
           <button className="px-4 p-3 btn btn-success">
             <CurrencyRupeeIcon /> Pay
           </button>

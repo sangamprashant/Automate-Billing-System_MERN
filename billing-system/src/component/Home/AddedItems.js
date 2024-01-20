@@ -2,14 +2,15 @@ import { Button, Card, Col, Row, Space, Table, Tooltip } from "antd";
 import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
 import AddIcon from "@mui/icons-material/Add";
-import RedoIcon from '@mui/icons-material/Redo';
-import UndoIcon from '@mui/icons-material/Undo';
+import RedoIcon from "@mui/icons-material/Redo";
+import UndoIcon from "@mui/icons-material/Undo";
 import SearchIcon from "@mui/icons-material/Search";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import ReplayIcon from '@mui/icons-material/Replay';
+import ReplayIcon from "@mui/icons-material/Replay";
 import { SearchOutlined } from "@ant-design/icons";
-import React from "react";
+import React, { useContext } from "react";
 import { TableHead } from "@mui/material";
+import { AppContext } from "../../AppContext";
 const { Meta } = Card;
 // Sample array of data for cards
 const cardData = [
@@ -182,10 +183,11 @@ const dataSource = [
     rate: 10,
     total: 100,
   },
- 
 ];
 
 function AddedItems() {
+  const { isLogged, setIsLogged, goToPayment, setGoToPayment } =
+    useContext(AppContext);
   return (
     <div className="home-main item-section">
       {/* North Section */}
@@ -201,6 +203,7 @@ function AddedItems() {
                 <input
                   className="form-control bg-warning-subtle"
                   placeholder="Search"
+                  disabled={goToPayment}
                 />
               </td>
               <td>
@@ -208,6 +211,7 @@ function AddedItems() {
                 <input
                   className="form-control bg-warning-subtle "
                   placeholder="Barcode"
+                  disabled={goToPayment}
                 />
               </td>
               <td>
@@ -215,13 +219,14 @@ function AddedItems() {
                 <input
                   className="form-control bg-warning-subtle"
                   placeholder="QTY"
+                  disabled={goToPayment}
                 />
               </td>
               <td className="d-flex  align-items-center">
-                <button className="btn btn-primary">
+                <button className="btn btn-primary" disabled={goToPayment}>
                   <SearchIcon />
                 </button>
-                {/* <button className="btn btn-primary"><AddIcon/></button> */}
+                {/* <button className="btn btn-primary" disabled={goToPayment}><AddIcon/></button> */}
               </td>
             </tr>
           </tbody>
@@ -235,6 +240,7 @@ function AddedItems() {
                   className="form-control bg-warning-subtle"
                   type="number"
                   placeholder="00%"
+                  disabled={goToPayment}
                 />
               </td>
               <td>
@@ -243,6 +249,7 @@ function AddedItems() {
                   className="form-control bg-warning-subtle "
                   type="number"
                   placeholder="0.00"
+                  disabled={goToPayment}
                 />
               </td>
 
@@ -252,6 +259,7 @@ function AddedItems() {
                   className="form-control bg-warning-subtle"
                   placeholder="0.00"
                   type="number"
+                  disabled={goToPayment}
                 />
               </td>
               <td>
@@ -267,17 +275,23 @@ function AddedItems() {
         </table>
         <div className="d-flex justify-content-end">
           {/* buttons */}
-        <Space size={[8, 16]} wrap className="justify-content-center">
-          <Tooltip title="Reset the billing items">
-            <button className="btn btn-primary">Reset</button>
-          </Tooltip>
-          <Tooltip title="Undo">
-            <button className="btn btn-primary"><UndoIcon/></button>
-          </Tooltip>
-          <Tooltip title="Redo">
-            <button className="btn btn-primary"><RedoIcon/></button>
-          </Tooltip>
-        </Space>
+          <Space size={[8, 16]} wrap className="justify-content-center">
+            <Tooltip title="Reset the billing items">
+              <button className="btn btn-primary" disabled={goToPayment}>
+                Reset
+              </button>
+            </Tooltip>
+            <Tooltip title="Undo">
+              <button className="btn btn-primary" disabled={goToPayment}>
+                <UndoIcon />
+              </button>
+            </Tooltip>
+            <Tooltip title="Redo">
+              <button className="btn btn-primary" disabled={goToPayment}>
+                <RedoIcon />
+              </button>
+            </Tooltip>
+          </Space>
         </div>
       </div>
 
@@ -325,8 +339,6 @@ function AddedItems() {
             </tr>
           </tbody>
         </table>
-
-        
       </div>
     </div>
   );
