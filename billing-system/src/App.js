@@ -1,12 +1,12 @@
 import { Alert, Space, message } from "antd";
 import "./App.css";
 import { Route, Link, Routes } from "react-router-dom";
-import { Home, Login } from "./component";
+import { Home, Login, Register } from "./component";
 import { useState } from "react";
 import { AppContext } from "./AppContext";
 
 function App() {
-  const [isLogged, setIsLogged] = useState(true);
+  const [isLogged, setIsLogged] = useState(false);
   // home
   const [goToPayment, setGoToPayment] = useState(false);
 
@@ -16,7 +16,8 @@ function App() {
     >
       {!isLogged ? (
         <Routes>
-          <Route path="/" element={<Login />} />
+          {/* <Route path="/" element={<Login />} /> */}
+          <Route path="/" element={<Register />} />
         </Routes>
       ) : (
         <Routes>

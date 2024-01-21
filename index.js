@@ -13,10 +13,10 @@ app.use(express.json());
 
 const mongoose = require("mongoose");
 
-// const userRoute = require("./route/userRoute");
+const userRoute = require("./route/userRoute");
 // const adminRoute = require("./route/adminRoutes");
 // const doctorRoute = require("./route/doctorRoutes");
-// app.use("/api/user", userRoute);
+app.use("/api/user", userRoute);
 // app.use("/api/admin", adminRoute);
 // app.use("/api/doctor", doctorRoute);
 
