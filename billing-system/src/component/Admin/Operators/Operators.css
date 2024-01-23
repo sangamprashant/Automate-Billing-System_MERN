@@ -1,0 +1,32 @@
+.profile-web-cam-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(177, 177, 177, 0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  z-index: 9999;
+}
+.capture-bod-confirm-box .icon-box-danger {
+  background-color: rgb(255, 46, 46);
+}
+.capture-bod-confirm-box .icon-box-primary {
+  background-color: rgb(25, 136, 255);
+}
+
+.capture-bod-confirm-box div {
+  display: flex;
+  align-items: center;
+  color: white;
+  border-radius: 50%;
+  font-size: 30px;
+  padding: 5px;
+  cursor: pointer;
+}
+.capture-bod-confirm-box div svg {
+  font-size: 30px;
+}

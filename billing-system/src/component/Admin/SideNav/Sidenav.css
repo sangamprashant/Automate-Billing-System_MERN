@@ -1,0 +1,90 @@
+/* Sidebar Container */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  background-color: #e9e9e9;
+  color: #fff;
+  height: 100vh;
+  width: 250px;
+  transition: width 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* Sidebar Content */
+.sidebar-content {
+  padding: 20px;
+}
+
+/* Sidebar Links */
+.sidebar a {
+  display: flex;
+  align-items: center;
+  padding: 10px 10px;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar a:hover {
+  background-color: #343a40;
+}
+
+/* Active Link */
+.sidebar a.active {
+  background-color: #007bff;
+}
+
+/* Inactive Link */
+.sidebar a.inactive {
+  background-color: #ffffff;
+  color: black;
+}
+
+/* Toggle Button */
+.toggle-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Adjusted Sidebar for Smaller Screens */
+.sidebar.small {
+  width: 80px;
+}
+
+.sidebar.small .sidebar-content {
+  display: none;
+}
+
+.sidebar.small a {
+  text-align: center;
+  padding: 10px;
+  text-wrap: nowrap;
+}
+
+/* Adjusted Toggle Button for Smaller Screens */
+.sidebar.small .toggle-btn {
+  /* width: 70px; */
+  text-align: center;
+}
+
+/* Main Content */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  /* margin-left: 250px; */
+  transition: margin-left 0.3s ease;
+}
+
+/* Adjusted Main Content for Smaller Screens */
+.main-content.small {
+  margin-left: 70px;
+}
+
+/* Main Container Card */
+.main-content .card {
+  flex: 1;
+}

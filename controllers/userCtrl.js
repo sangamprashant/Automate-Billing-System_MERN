@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const registerController = async (req, res) => {
   try {
     const { faceId } = req.body;
-    const newUser = new userModel({faceId});
+    const newUser = new userModel({ faceId });
     await newUser.save();
     console.log(newUser);
     res.status(200).send({ message: "Register Sucessfully", success: true });
@@ -23,30 +23,55 @@ const registerController = async (req, res) => {
 
 // login callback
 const loginController = async (req, res) => {
-    try {
-      const user = await userModel.findOne({ faceId: req.body.faceId });
-      if (!user) {
-        return res
-          .status(200)
-          .send({ message: "user not found", success: false });
-      }
-  //     const isMatch = await bcrypt.compare(req.body.password, user.password);
-  //     if (!isMatch) {
-  //       return res
-  //         .status(200)
-  //         .send({ message: "Invlid EMail or Password", success: false });
-  //     }
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "1d",
-      });
-      res.status(200).send({ message: "Login Success", success: true, token });
-    } catch (error) {
-      console.log(error);
-      res.status(500).send({ message: `Error in Login CTRL ${error.message}` });
+  try {
+    const user = await userModel.findOne({ faceId: req.body.faceId });
+    if (!user) {
+      return res
+        .status(200)
+        .send({ message: "user not found", success: false });
     }
+    //     const isMatch = await bcrypt.compare(req.body.password, user.password);
+    //     if (!isMatch) {
+    //       return res
+    //         .status(200)
+    //         .send({ message: "Invlid EMail or Password", success: false });
+    //     }
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+    res.status(200).send({ message: "Login Success", success: true, token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: `Error in Login CTRL ${error.message}` });
+  }
+};
+
+// user data fetching
+const userDataController = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.body.userId);
+    if (!user) {
+      res.status(200).json({
+        success: false,
+        message: `User not found.`,
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: `User found.`,
+      data: user,
+    });
+  } catch (error) {
+    console.log("error in fetching user data:", error);
+    res.status(500).json({
+      success: false,
+      message: `User Data Controller ${error.message}`,
+    });
+  }
 };
 
 module.exports = {
   loginController,
   registerController,
+  userDataController,
 };

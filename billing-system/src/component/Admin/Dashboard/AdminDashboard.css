@@ -1,0 +1,27 @@
+.dashboard-title {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.dashboard-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.dashboard-card .dashboard-icon {
+  font-size: 45px;
+}
+.dashboard-card .icon-box {
+  background-color: rgb(203, 239, 255);
+  padding: 10px;
+  border-radius: 50%;
+}
+.dashboard-card .dashboard-value {
+  font-size: 50px;
+  font-weight: 700;
+}
+.dashboard-card .dashboard-label {
+  font-weight: 700;
+  color: rgb(56, 56, 56);
+}

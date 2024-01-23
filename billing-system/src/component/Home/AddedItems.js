@@ -313,7 +313,7 @@ function AddedItems() {
       {/* South Section */}
       <div className="south-section py-2 d-flex justify-content-between align-items-center flex-column px-4 bg-ui">
         {/* order details */}
-        <table className="table text-center ">
+        <table className="table table-product text-center ">
           <thead>
             <tr>
               <td className="box-cell-top bg-primary text-white shadow">

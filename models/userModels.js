@@ -1,9 +1,20 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+  },
   faceId: {
     type: String,
-    required: [true, "name is require"],
+    required: [true, "face id is require"],
   },
   isAdmin: {
     type: Boolean,

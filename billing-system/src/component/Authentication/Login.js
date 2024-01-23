@@ -11,9 +11,18 @@ const fio = new faceIO(process.env.REACT_APP_PUBLIC_ID);
 function Login() {
   const { token, setToken, isLogged, setIsLogged } = useContext(AppContext);
   const [isEnrolling, setIsEnrolling] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (fio) {
+        handleLogIn();
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [fio]);
 
   const handleEnroll = async () => {
     try {
@@ -47,7 +56,7 @@ function Login() {
       let response = await fio.authenticate({
         locale: "auto",
       });
-      handelDbLogin(response.facialId)
+      handelDbLogin(response.facialId);
     } catch (error) {
       handleError(error);
       console.log(error);
@@ -68,7 +77,7 @@ function Login() {
         sessionStorage.setItem("token", loginResponse?.data?.token);
         setIsLogged(true);
         setToken(loginResponse.data.token);
-        navigate("/")
+        navigate("/");
       } else {
         message.error(loginResponse?.data?.message);
       }
