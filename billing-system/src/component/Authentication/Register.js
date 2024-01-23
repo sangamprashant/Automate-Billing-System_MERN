@@ -9,7 +9,6 @@ const fio = new faceIO(process.env.REACT_APP_PUBLIC_ID);
 function Register() {
   const [isEnrolling, setIsEnrolling] = useState(false);
   const [email, setEmail] = useState("");
-  const [pin, setPin] = useState("");
   const [error, setError] = useState(null);
 
   const handleEnroll = async () => {

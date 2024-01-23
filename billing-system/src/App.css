@@ -15,3 +15,10 @@ body {
 .bg-lucent {
   background-color: rgba(69, 69, 69, 0.085);
 }
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

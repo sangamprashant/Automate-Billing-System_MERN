@@ -23,6 +23,10 @@
   background-color: rgb(234, 245, 254);
 }
 
+.crusor-disabled{
+  cursor: none;
+}
+
 /* ================== Added items ====================== */
 .table {
   border-collapse: separate;

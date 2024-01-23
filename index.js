@@ -19,6 +19,8 @@ const userRoute = require("./route/userRoute");
 app.use("/api/user", userRoute);
 // app.use("/api/admin", adminRoute);
 // app.use("/api/doctor", doctorRoute);
+app.use(require("./try"));
+console.log(process.env.EMAIL_PASSWORD)
 
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,

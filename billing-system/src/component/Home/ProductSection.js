@@ -1,16 +1,18 @@
 import { Button, Card, Tooltip } from "antd";
 import NorthIcon from "@mui/icons-material/North";
+import LogoutIcon from "@mui/icons-material/Logout";
 import SouthIcon from "@mui/icons-material/South";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useContext } from "react";
 import { AppContext } from "../../AppContext";
+import { useNavigate } from "react-router-dom";
 const { Meta } = Card;
 
 function ProductSection() {
-  const { isLogged, setIsLogged, goToPayment, setGoToPayment } =
+  const { setToken, isLogged, setIsLogged, goToPayment, setGoToPayment } =
     useContext(AppContext);
-  console.log(goToPayment);
+    const navigate = useNavigate()
   const handelGoToPayment = () => {
     console.log("pay button is Clicked");
     setGoToPayment(true);
@@ -164,6 +166,14 @@ function ProductSection() {
     // Add more data items as needed
   ];
 
+  const handelLogout = () => {
+    sessionStorage.clear();
+    setIsLogged(false);
+    setToken("");
+    window.location.href = '/';
+    // navigate("/")
+  };
+
   return (
     <div className=" home-main product-section p-2 bg-ui">
       {/* North Section */}
@@ -175,12 +185,20 @@ function ProductSection() {
             size="large"
             type="primary"
           />
-          <h2>Product list : {"Fruits"}</h2>
+          <h2>{"Fruits"}</h2>
         </div>
-        <Button disabled className="bg-primary text-white">
-          {" "}
-          18% GST
-        </Button>
+        <div className="d-flex gap-2">
+          <button
+            className="btn btn-primary bg-primary crusor-disabled"
+            style={{ cursor: "no-drop" }}
+          >
+            {" "}
+            18% GST
+          </button>
+          <button className="btn btn-danger" onClick={handelLogout}>
+            Logout <LogoutIcon />
+          </button>
+        </div>
       </div>
 
       {/* Main Content Section */}
