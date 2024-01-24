@@ -13,14 +13,14 @@ app.use(express.json());
 
 const mongoose = require("mongoose");
 
+const categoryRoute = require("./route/categoryRoute");
+const productRoute = require("./route/productRoute");
 const userRoute = require("./route/userRoute");
-// const adminRoute = require("./route/adminRoutes");
-// const doctorRoute = require("./route/doctorRoutes");
+app.use("/api/category", categoryRoute);
+app.use("/api/product", productRoute);
 app.use("/api/user", userRoute);
-// app.use("/api/admin", adminRoute);
-// app.use("/api/doctor", doctorRoute);
+
 app.use(require("./try"));
-console.log(process.env.EMAIL_PASSWORD)
 
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,

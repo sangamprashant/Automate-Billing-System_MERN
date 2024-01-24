@@ -6,6 +6,7 @@ import {
   AdminDashboard,
   AdminOperators,
   AdminProduct,
+  AdminProfile,
   Home,
   Loading,
   Login,
@@ -14,7 +15,7 @@ import {
 } from "./component";
 import { useEffect, useState } from "react";
 import { AppContext } from "./AppContext";
-import { fetchUserData } from "./apiCalls";
+import { fetchUserData, handleGetCategory } from "./apiCalls";
 
 function App() {
   const [token, setToken] = useState(sessionStorage.getItem("token"));
@@ -23,6 +24,7 @@ function App() {
   const [userData, setUserData] = useState(null);
   // home
   const [goToPayment, setGoToPayment] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     if (!userData) {
@@ -31,6 +33,16 @@ function App() {
       setIsLoading(false);
     }
   }, [userData]);
+  useEffect(() => {
+    if (token) {
+      fetchCatogry();
+    }
+  }, [token]);
+
+  const fetchCatogry = async () => {
+    const data = await handleGetCategory(token);
+    setCategories(data);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,6 +71,8 @@ function App() {
         setIsLoading,
         userData,
         setUserData,
+        categories,
+        setCategories,
       }}
     >
       {!isLogged ? (
@@ -79,7 +93,7 @@ function App() {
             <Route path="/admin/operators" element={<AdminOperators />} />
             <Route path="/admin/products" element={<AdminProduct />} />
             <Route path="/admin/categories" element={<AdminCategories />} />
-            <Route path="/admin/profile" element={<AdminCategories />} />
+            <Route path="/admin/profile" element={<AdminProfile />} />
           </Routes>
         </>
       )}

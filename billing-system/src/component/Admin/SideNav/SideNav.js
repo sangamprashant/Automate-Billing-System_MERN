@@ -1,8 +1,5 @@
 import HomeIcon from "@mui/icons-material/Home";
-
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import Groups2Icon from "@mui/icons-material/Groups2";
 import Topbar from "../TopBar/Topbar";
 import { message } from "antd";
 import { AppContext } from "../../../AppContext";
@@ -13,7 +10,9 @@ import {
   AssignmentIndIcon,
   Inventory2Icon,
   ListIcon,
+  LocalOfferIcon,
   PersonIcon,
+  ShoppingCartOutlinedIcon,
 } from "../../../assets/icons";
 
 function SideNav({ children }) {
@@ -38,6 +37,10 @@ function SideNav({ children }) {
       icon: <ListIcon />,
     },
     {
+      label: "orders",
+      path: "/admin/orders",
+      icon: <LocalOfferIcon />,
+    },    {
       label: "Profile",
       path: "/admin/profile",
       icon: <PersonIcon />,
@@ -58,17 +61,19 @@ function SideNav({ children }) {
     }
   };
   return (
-    <div className={`d-flex`}>
+    <div className={`d-flex h-100`}>
       <div
         className={`sidebar d-flex  flex-column gap-5 p-3 ${
           isSidebarOpen ? "sidebar-open" : "small"
         }`}
       >
-        <div className="d-flex justify-content-start text-dark flex-column">
-          {/* <img src={HomeIconW} alt="icon" height={50} width={50} /> */}
-          {/* <p>{user?.isAdmin ? "Admin" : user?.isDoctor ? "Doctor" : "User"}</p> */}
-        </div>
-        <div className="d-flex justify-content-center flex-column gap-5">
+        <Link className="sidenav-item shadow rounded-3 border-3 inactive d-flex justify-content-start text-dark py-4 align-items-center">
+          <ShoppingCartOutlinedIcon stroke="#8e19c7" size="20px" />
+          {isSidebarOpen && (
+            <b style={{ color: "#8e19c7", fontSize: "20px" }}>Dashbord</b>
+          )}
+        </Link>
+        <div className="d-flex justify-content-center flex-column gap-4">
           <Link
             className={`sidenav-item shadow rounded-3 border-3 ${
               location.pathname === "/admin/dashboard" ? "active" : "inactive"
@@ -106,7 +111,7 @@ function SideNav({ children }) {
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
         />
-        <div className="card p-3 mt-3 h-100">{children}</div>
+        <div className="card side-card p-3 mt-3 h-100">{children}</div>
       </div>
     </div>
   );

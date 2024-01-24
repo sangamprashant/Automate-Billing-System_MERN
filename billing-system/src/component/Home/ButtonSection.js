@@ -1,9 +1,13 @@
 import { Button } from "antd";
 import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
-import React from "react";
+import React, { useState } from "react";
+import { ProductCategory } from "../Admin/Products/rawData";
 
 function ButtonSection() {
+  const [categorySelected, setCategorySelected] = useState(
+    ProductCategory[0].category
+  );
   return (
     <div className="home-main button-section p-2 bg-ui">
       {/* North Section */}
@@ -19,20 +23,17 @@ function ButtonSection() {
 
       {/* Main Content Section */}
       <div className=" button-section-scroll p-2">
-        <button className="w-100 mb-4 p-3 btn btn-primary">hello</button>
-        <button className="w-100 mb-4 p-3 btn btn-primary">hello</button>
-        <button className="w-100 mb-4 p-3 btn btn-primary">hello</button>
-        <button className="w-100 mb-4 p-3 btn btn-primary">hello</button>
-        <button className="w-100 mb-4 p-3 btn btn-primary">hello</button>
-        <button className="w-100 mb-4 p-3 btn btn-primary">hello</button>
-        <button className="w-100 mb-4 p-3 btn btn-primary">hello</button>
-        <button className="w-100 mb-4 p-3 btn btn-secondary">hello</button>
-        <button className="w-100 mb-4 p-3 btn btn-secondary">hello</button>
-        <button className="w-100 mb-4 p-3 btn btn-secondary">hello</button>
-        <button className="w-100 mb-4 p-3 btn btn-secondary">hello</button>
-        <button className="w-100 mb-4 p-3 btn btn-secondary">hello</button>
-        <button className="w-100 mb-4 p-3 btn btn-secondary">hello</button>
-        {/* Add other buttons or components here */}
+        {ProductCategory.map((data, index) => (
+          <button
+            key={index}
+            className={`w-100 mb-4 p-3 btn btn-${
+              categorySelected === data.category ? "primary" : "secondary"
+            }`}
+            onClick={() => setCategorySelected(data.category)}
+          >
+            {data.category}
+          </button>
+        ))}
       </div>
 
       {/* South Section */}

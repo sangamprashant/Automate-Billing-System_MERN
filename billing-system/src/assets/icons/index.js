@@ -8,6 +8,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import ListIcon from "@mui/icons-material/List";
 import PersonIcon from "@mui/icons-material/Person";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 
 export {
   AssignmentIndIcon,
@@ -20,4 +24,8 @@ export {
   CheckIcon,
   ListIcon,
   PersonIcon,
+  DeleteIcon,
+  ShoppingCartOutlinedIcon,
+  EditIcon,
+  LocalOfferIcon,
 };

@@ -75,6 +75,7 @@
 .main-content {
   display: flex;
   flex-direction: column;
+  height: 100vh;
   /* margin-left: 250px; */
   transition: margin-left 0.3s ease;
 }
@@ -85,6 +86,8 @@
 }
 
 /* Main Container Card */
-.main-content .card {
-  flex: 1;
+.main-content .side-card {
+ flex: 1;
+ height: 100%;
+ overflow-y: scroll;
 }
