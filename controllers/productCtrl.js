@@ -2,6 +2,7 @@ const userModel = require("../models/userModels");
 const CategoryModel = require("../models/categories");
 const ProductModel = require("../models/product");
 
+//create product
 const CreateProductController = async (req, res) => {
   try {
     const { p_name, p_category, p_price, p_stock, p_image } = req.body;
@@ -59,7 +60,31 @@ const GetAllProductsController = async (req, res) => {
   }
 };
 
+//fetch product bu categorie
+const GetProductsByCategoryController = async (req, res) => {
+  try {
+    const { category } = req.params;
+
+    // Query products based on the specified category
+    const products = await ProductModel.find({ p_category: category }).sort({
+      _id: 1, // Optionally, you can sort the products based on their IDs
+    });
+
+    res.status(200).json({
+      success: true,
+      products: products,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch products by category',
+    });
+  }
+};
+
 module.exports = {
   CreateProductController,
   GetAllProductsController,
+  GetProductsByCategoryController
 };

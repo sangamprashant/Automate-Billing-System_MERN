@@ -4,10 +4,7 @@ import SouthIcon from "@mui/icons-material/South";
 import React, { useState } from "react";
 import { ProductCategory } from "../Admin/Products/rawData";
 
-function ButtonSection() {
-  const [categorySelected, setCategorySelected] = useState(
-    ProductCategory[0].category
-  );
+function ButtonSection({ categories, categorySelected, setCategorySelected }) {
   return (
     <div className="home-main button-section p-2 bg-ui">
       {/* North Section */}
@@ -23,7 +20,7 @@ function ButtonSection() {
 
       {/* Main Content Section */}
       <div className=" button-section-scroll p-2">
-        {ProductCategory.map((data, index) => (
+        {categories?.map((data, index) => (
           <button
             key={index}
             className={`w-100 mb-4 p-3 btn btn-${

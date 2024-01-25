@@ -42,8 +42,9 @@ function AdminViewProduct({ tableData }) {
       <table className="table table-hover">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>Sr.no</th>
             <th>Product image</th>
+            <th>Barcode</th>
             <th>Name of Product</th>
             <th>Category </th>
             <th>Stock </th>
@@ -55,7 +56,8 @@ function AdminViewProduct({ tableData }) {
           {products.map((data, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
-              <td><img src={data.p_image} width={100} height={100} className="object-fit-contain"/></td>
+              <td><img src={data.p_image} width={100} height={100} className="object-fit-contain" loading="lazy"/></td>
+              <td>{data.p_id}</td>
               <td>{data.p_name}</td>
               <td>{data.p_category}</td>
               <td>{data.p_stock}</td>
