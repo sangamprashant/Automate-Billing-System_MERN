@@ -28,9 +28,15 @@ function Home() {
 
   //selected product list
   const [selectedProducts, setSelectedProducts] = useState([]);
-
   const [selectedProductsHistory, setSelectedProductsHistory] = useState([]);
   const [currentHistoryIndex, setCurrentHistoryIndex] = useState(0);
+  // Added Items
+  const [discountPercentagePerUnit, setDiscountPercentagePerUnit] = useState(0.0);
+  const [discountAmountPerUnit, setDiscountAmountPerUnit] = useState(0.0);
+  const [totalDiscountGivenInOverall, setTotalDiscountGivenInOverall] = useState(0.0);
+  const [calculatedTotalDiscountOfAllDiscount, setCalculatedTotalDiscountOfAllDiscount] = useState(0.0);
+  const [selectItemsTotal,setSelectItemsTotal] = useState(0.0)
+  const [qtyCount, setQtyCount] = useState(0);
 
   useEffect(() => {
     // Save the current selected products to history
@@ -50,9 +56,18 @@ function Home() {
 
   const handleRedo = () => {
     if (currentHistoryIndex < selectedProductsHistory.length - 1) {
-      setCurrentHistoryIndex((prevIndex) => prevIndex + 1);
-      setSelectedProducts(selectedProductsHistory[currentHistoryIndex + 1]);
+      setCurrentHistoryIndex((prevIndex) => {
+        prevIndex + 1
+        setSelectedProducts(selectedProductsHistory[prevIndex + 1]);
+      });
     }
+  };
+
+  const handleReset = () => {
+    // Reset all data
+    setSelectedProducts([]);
+    setSelectedProductsHistory([]);
+    setCurrentHistoryIndex(0);
   };
 
   useEffect(() => {
@@ -86,12 +101,32 @@ function Home() {
     }
   };
 
+  const handelCashPayment = () => {
+    message.success("Cash Payment")
+  }
+  const handelOnlinePayment = () => {
+    message.success("Online Payment")
+  }
+
   return (
     <div className="d-flex bg-white">
       <AddedItems
         selectedProducts={selectedProducts}
         handleUndo={handleUndo}
         handleRedo={handleRedo}
+        handleReset={handleReset}
+        discountPercentagePerUnit={discountPercentagePerUnit} 
+        setDiscountPercentagePerUnit={setDiscountPercentagePerUnit}
+        discountAmountPerUnit={discountAmountPerUnit} 
+        setDiscountAmountPerUnit={setDiscountAmountPerUnit}
+        totalDiscountGivenInOverall={totalDiscountGivenInOverall} 
+        setTotalDiscountGivenInOverall={setTotalDiscountGivenInOverall}
+        calculatedTotalDiscountOfAllDiscount={calculatedTotalDiscountOfAllDiscount} 
+        setCalculatedTotalDiscountOfAllDiscount={setCalculatedTotalDiscountOfAllDiscount}
+        selectItemsTotal={selectItemsTotal} 
+        setSelectItemsTotal={setSelectItemsTotal}
+        qtyCount={qtyCount} 
+        setQtyCount={setQtyCount}
       />
       {!goToPayment ? (
         <>
@@ -108,7 +143,12 @@ function Home() {
           />
         </>
       ) : (
-        <Payment />
+        <Payment 
+          selectItemsTotal={selectItemsTotal} 
+          calculatedTotalDiscountOfAllDiscount={calculatedTotalDiscountOfAllDiscount}
+          handelCashPayment={handelCashPayment}
+          handelOnlinePayment={handelOnlinePayment}
+          />
       )}
     </div>
   );

@@ -6,7 +6,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { AppContext } from "../../AppContext";
 
-function Payment() {
+function Payment({
+  selectItemsTotal,
+  calculatedTotalDiscountOfAllDiscount,
+  handelCashPayment,
+  handelOnlinePayment,
+}) {
   const { isLogged, setIsLogged, goToPayment, setGoToPayment } =
     useContext(AppContext);
 
@@ -110,14 +115,28 @@ function Payment() {
             <b>PAYMENT</b>
           </h1>
           <h3 className="text-success">
-            <b>PAY: 123.43</b>
+            <b>
+              PAY:{" "}
+              {(
+                selectItemsTotal - calculatedTotalDiscountOfAllDiscount
+              ).toFixed(2)}
+            </b>
           </h3>{" "}
         </div>
 
         <hr />
         <div className="d-flex mt-4 gap-3">
           <div className=" d-flex justify-content-center flex-column gap-3">
-          <b style={{margin:"0", padding:"0", fontSize:"14px"}} className="text-success">Selected mode will   be in green color</b>
+            <b
+              style={{ margin: "0", padding: "0", fontSize: "14px" }}
+              className={`text-${paymentModeIs ? "success" : "danger"}`}
+            >
+              {paymentModeIs === "cash"
+                ? "Payment mode is Cash"
+                : paymentModeIs === "online"
+                ? "Payment mode is Online"
+                : "Please select a payment mode"}
+            </b>
             <Tooltip title="Cash Payment">
               <button
                 className={`px-4 p-3 btn btn-${
@@ -220,27 +239,32 @@ function Payment() {
                 Email
               </button>
             </div>
-
-            <div className="d-flex flex-wrap gap-3 justify-content-between">
-              {keyboardButtons.map((button, index) => (
-                <button
-                  key={index}
-                  className={`btn btn-${
-                    button === "C" || button === "D" ? "danger" : "primary"
-                  } mr-2 mb-2 p-2`}
-                  style={{ width: "calc(8% - 8px)" }}
-                  onClick={() => handleButtonClick(button)}
-                  disabled={
-                    activeField === "mobile" &&
-                    (qwertyKeyboard[1].includes(button) ||
-                      qwertyKeyboard[2].includes(button) ||
-                      qwertyKeyboard[3].includes(button) ||
-                      qwertyKeyboard[4].includes(button))
-                  }
-                >
-                  <b>{button}</b>
-                </button>
-              ))}
+            <div>
+              <div className="d-flex flex-wrap gap-3 justify-content-center">
+                {keyboardButtons.map((button, index) => (
+                  <button
+                    key={index}
+                    className={`btn btn-${
+                      button === "C" || button === "D"
+                        ? "danger"
+                        : button === "@" || button === "."
+                        ? "success"
+                        : "primary"
+                    } mr-2 mb-2 p-2`}
+                    style={{ width: "calc(8% - 8px)" }}
+                    onClick={() => handleButtonClick(button)}
+                    disabled={
+                      activeField === "mobile" &&
+                      (qwertyKeyboard[1].includes(button) ||
+                        qwertyKeyboard[2].includes(button) ||
+                        qwertyKeyboard[3].includes(button) ||
+                        qwertyKeyboard[4].includes(button))
+                    }
+                  >
+                    <b>{button}</b>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -249,7 +273,29 @@ function Payment() {
         <hr />
         <div className="south-section py-2 d-flex justify-content-end align-items-center px-5 ">
           <Tooltip title="Payment">
-            <button className={`px-4 p-3 btn btn-${(paymentModeIs.trim() && isEmailValid && isMobileValid && isNameValid)?"success":"danger"}`}>
+            <button
+              className={`px-4 p-3 btn btn-${
+                paymentModeIs.trim() &&
+                isEmailValid &&
+                isMobileValid &&
+                isNameValid
+                  ? "success"
+                  : "danger"
+              }`}
+              onClick={() => {
+                paymentModeIs === "online"
+                  ? handelOnlinePayment()
+                  : handelCashPayment();
+              }}
+              disabled={
+                paymentModeIs.trim() &&
+                isEmailValid &&
+                isMobileValid &&
+                isNameValid
+                  ? false
+                  : true
+              }
+            >
               <PaymentsIcon /> Pay
             </button>
           </Tooltip>

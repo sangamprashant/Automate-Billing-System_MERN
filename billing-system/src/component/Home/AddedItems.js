@@ -11,16 +11,26 @@ import { SearchOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../AppContext";
 
-function AddedItems({ selectedProducts, handleUndo, handleRedo }) {
+function AddedItems({ 
+  selectedProducts, 
+  handleUndo, 
+  handleRedo, 
+  handleReset,
+  discountPercentagePerUnit,
+  setDiscountPercentagePerUnit,
+  discountAmountPerUnit,
+  setDiscountAmountPerUnit,
+  totalDiscountGivenInOverall,
+  setTotalDiscountGivenInOverall,
+  calculatedTotalDiscountOfAllDiscount ,
+  setCalculatedTotalDiscountOfAllDiscount,
+  selectItemsTotal,
+  setSelectItemsTotal,
+  qtyCount ,
+  setQtyCount,
+}) {
   const { isLogged, setIsLogged, goToPayment, setGoToPayment } =
     useContext(AppContext);
-
-  const [discountPercentagePerUnit, setDiscountPercentagePerUnit] = useState(0.0);
-  const [discountAmountPerUnit, setDiscountAmountPerUnit] = useState(0.0);
-  const [totalDiscountGivenInOverall, setTotalDiscountGivenInOverall] = useState(0.0);
-  const [calculatedTotalDiscountOfAllDiscount, setCalculatedTotalDiscountOfAllDiscount] = useState(0.0);
-  const [selectItemsTotal,setSelectItemsTotal] = useState(0.0)
-  const [qtyCount, setQtyCount] = useState(0);
 
   const handlePositiveNumberChange = (inputValue, setterFunction) => {
     if (inputValue === "") {
@@ -169,7 +179,12 @@ function AddedItems({ selectedProducts, handleUndo, handleRedo }) {
         <div className="d-flex justify-content-end">
           {/* buttons */}
           <Space size={[8, 16]} wrap className="justify-content-center">
-            <Tooltip title="Reset the billing items">
+            <Tooltip title="Go to admin pannel"  >
+              <button className="btn btn-danger" disabled={goToPayment} >
+                Admin Pannel
+              </button>
+            </Tooltip>
+            <Tooltip title="Reset the billing items" onClick={handleReset}>
               <button className="btn btn-primary" disabled={goToPayment} >
                 Reset
               </button>
