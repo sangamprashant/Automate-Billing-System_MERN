@@ -7,6 +7,7 @@ import {
   AdminOperators,
   AdminProduct,
   AdminProfile,
+  Bill,
   Home,
   Loading,
   Login,
@@ -78,6 +79,7 @@ function App() {
       {!isLogged ? (
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/bill/:id" element={<Bill />} />
           <Route path="*" element={<Login />} />
           {/* <Route path="/" element={<Register />} /> */}
         </Routes>
@@ -86,6 +88,8 @@ function App() {
           <Loading />
           <Routes>
             <Route path="/" element={<Welcome />} />
+            {/* bill */}
+            <Route path="/bill/:id" element={<Bill />} />
             {/* operator */}
             <Route path="/store" element={<Home />} />
             {/* admin */}

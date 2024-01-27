@@ -11,13 +11,16 @@ function Payment({
   calculatedTotalDiscountOfAllDiscount,
   handelCashPayment,
   handelOnlinePayment,
+  customerName,
+  setCustomerName,
+  mobileNumber,
+  setMobileNumber,
+  email,
+  setEmail,
 }) {
   const { isLogged, setIsLogged, goToPayment, setGoToPayment } =
     useContext(AppContext);
 
-  const [customerName, setCustomerName] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [email, setEmail] = useState("");
   const [activeField, setActiveField] = useState("name");
   const [paymentModeIs, setPaymentModeIs] = useState("");
   const isMobileValid = mobileNumber.length === 10;

@@ -46,9 +46,7 @@ function ProductSection({
   };
 
   const handleProductSelect = (product) => {
-    const existingProduct = selectedProducts.find(
-      (p) => p._id === product._id
-    );
+    const existingProduct = selectedProducts.find((p) => p._id === product._id);
 
     if (existingProduct) {
       // If the product is already selected, update the count and total
@@ -154,7 +152,12 @@ function ProductSection({
           onClick={() => handleScroll(productByCategory.length - 1)}
         />
         <Tooltip title="Payment" onClick={handleGoToPayment}>
-          <button className="px-4 p-3 btn btn-success">
+          <button
+            className={`px-4 p-3 btn btn-${
+              !selectedProducts.length > 0 ? "danger" : "success"
+            }`}
+            disabled={selectedProducts.length > 0 ? false : true}
+          >
             <CurrencyRupeeIcon /> Pay
           </button>
         </Tooltip>

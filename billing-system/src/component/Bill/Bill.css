@@ -1,0 +1,43 @@
+:root {
+  --bill-primary: rgb(0, 0, 220);
+}
+
+.bill-container {
+  max-width: 900px;
+}
+.text-dark-blue {
+  color: var(--bill-primary);
+}
+
+.bill-boundary {
+  border: 5px solid var(--bill-primary);
+  margin: 10px 0;
+}
+
+.bill-heading {
+  font-size: 50px;
+}
+
+.total-section {
+    width: 100%;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+}
+
+.arrow-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #007bff; 
+    color: #fff; 
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .arrow-button:hover {
+    background-color: #0056b3; 
+  }

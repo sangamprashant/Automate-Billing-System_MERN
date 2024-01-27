@@ -37,6 +37,10 @@ function Home() {
   const [calculatedTotalDiscountOfAllDiscount, setCalculatedTotalDiscountOfAllDiscount] = useState(0.0);
   const [selectItemsTotal,setSelectItemsTotal] = useState(0.0)
   const [qtyCount, setQtyCount] = useState(0);
+  // payment 
+  const [customerName, setCustomerName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     // Save the current selected products to history
@@ -101,9 +105,36 @@ function Home() {
     }
   };
 
-  const handelCashPayment = () => {
+  const handelCashPayment = async () => {
     message.success("Cash Payment")
+    const orderDetails = {
+      salesMan:userData._id,
+      paymentMode:"cash",
+      customerName:customerName,
+      customerMobileNumber:mobileNumber,
+      customerEmail:email,
+      orderDetails:{
+        productsDetails:selectedProducts,
+        discountPercentagePerUnit, 
+        discountAmountPerUnit, 
+        totalDiscountGivenInOverall, 
+        calculatedTotalDiscountOfAllDiscount, 
+        selectItemsTotal,
+      }
+    }
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/order/cash/create`,orderDetails)
+      if(response.data.success){
+        message.success("Data created")
+      }
+      
+    } catch (error) {
+      console.log("Error in creating the order",error)
+      message.error("failed to create the order")
+    }
+    console.log(orderDetails)
   }
+
   const handelOnlinePayment = () => {
     message.success("Online Payment")
   }
@@ -148,6 +179,12 @@ function Home() {
           calculatedTotalDiscountOfAllDiscount={calculatedTotalDiscountOfAllDiscount}
           handelCashPayment={handelCashPayment}
           handelOnlinePayment={handelOnlinePayment}
+          customerName={customerName} 
+          setCustomerName={setCustomerName}
+          mobileNumber={mobileNumber} 
+          setMobileNumber={setMobileNumber}
+          email={email} 
+          setEmail={setEmail}
           />
       )}
     </div>

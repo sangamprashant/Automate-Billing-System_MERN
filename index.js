@@ -14,13 +14,16 @@ app.use(express.json());
 const mongoose = require("mongoose");
 
 const categoryRoute = require("./route/categoryRoute");
+const orderRoute = require("./route/orderRoute");
 const productRoute = require("./route/productRoute");
 const userRoute = require("./route/userRoute");
 app.use("/api/category", categoryRoute);
+app.use("/api/order", orderRoute);
 app.use("/api/product", productRoute);
 app.use("/api/user", userRoute);
 
 app.use(require("./try"));
+app.use(require("./bill"));
 
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,

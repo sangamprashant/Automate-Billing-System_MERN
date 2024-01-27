@@ -5,6 +5,7 @@ import AdminProduct from "./Admin/Products/AdminProduct";
 import AdminProfile from "./Admin/Profile/AdminProfile";
 import Login from "./Authentication/Login";
 import Register from "./Authentication/Register";
+import Bill from "./Bill/Bill";
 import Home from "./Home/Home";
 import Loading from "./Loading/Loading";
 import Welcome from "./Welcome/Welcome";
@@ -19,5 +20,6 @@ export {
   AdminOperators,
   AdminProduct,
   AdminCategories,
-  AdminProfile
+  AdminProfile,
+  Bill,
 };
