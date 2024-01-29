@@ -1,14 +1,9 @@
-const express = require("express");
-const router = express.Router();
+
 const nodemailer = require("nodemailer");
-const Orders = require("./models/orders");
 
 
 
-const run = async (req, res) => {
-
-    const data = await Orders.find()
-    const order= data[0]
+const EmailBill = async (order) => {
   // Create a nodemailer transporter using your email service credentials
   const transporter = nodemailer.createTransport({
     service: "gmail", // e.g., 'gmail'
@@ -21,8 +16,8 @@ const run = async (req, res) => {
   // Construct the email message
   const mailOptions = {
     from: "project.message@gamil.com",
-    to: "srivastavp891@gmail.com",
-    subject: "Welcome to Our Company",
+    to: order.customerEmail,
+    subject: "Bill of your purchase",
     html: `
     <html>
     <head>
@@ -117,7 +112,7 @@ const run = async (req, res) => {
                   <i>
                     <div>Tiwariganj, Lucknow</div>
                     <div>email.example.com</div>
-                    <div class="mb-3">${process.env.REACT_APP_BASE_URL}</div>
+                    <div class="mb-3">${process.env.PUBLIC_DOMAIN}</div>
                     <img
                       src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=http://localhost:3000/bill/65b43467701d3f747b8424dc"
                     />
@@ -131,7 +126,7 @@ const run = async (req, res) => {
                     <div>${order.customerEmail}</div>
                     <div><b>Payment mode:</b> ${order.paymentMode}</div>
                     <div><b>Invoice Number</b>: ${order.orderId}</div>
-                    <div><b>Issued Date</b>: 27/12/2000</div>
+                    <div><b>Issued Date</b>: ${order.purchaseDate}</div>
                   </i>
                 </td>
               </tr>
@@ -218,14 +213,13 @@ const run = async (req, res) => {
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.error(error);
-      res.status(500).send("Internal Server Error");
+      // res.status(500).send("Internal Server Error");
     } else {
       console.log("Email sent: " + info.response);
-      res.status(200).send("Email sent successfully");
+      // res.status(200).send("Email sent successfully");
     }
   });
 };
 
-// run()
 
-module.exports = router;
+module.exports = { EmailBill };

@@ -28,6 +28,13 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  purchaseDate: {
+    type: String,
+  },
+  orderStatus: {
+    type: String,
+    default:"pending"
+  },
   orderDetails: {
     productsDetails: {
       type: Array,

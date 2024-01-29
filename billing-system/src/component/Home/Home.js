@@ -7,8 +7,10 @@ import Payment from "./Payment";
 import { AppContext } from "../../AppContext";
 import { message } from "antd";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate()
   const {
     token,
     setToken,
@@ -72,6 +74,7 @@ function Home() {
     setSelectedProducts([]);
     setSelectedProductsHistory([]);
     setCurrentHistoryIndex(0);
+    setGoToPayment(false)
   };
 
   useEffect(() => {
@@ -123,9 +126,16 @@ function Home() {
       }
     }
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/order/cash/create`,orderDetails)
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/order/cash/create`,orderDetails,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       if(response.data.success){
-        message.success("Data created")
+        message.success(response.data.message || "Order created successfully")
+        navigate(`/bill/${response.data.order._id}`)
+        handleReset()
       }
       
     } catch (error) {
@@ -135,9 +145,38 @@ function Home() {
     console.log(orderDetails)
   }
 
-  const handelOnlinePayment = () => {
+  const handelOnlinePayment = async () => {
     message.success("Online Payment")
-  }
+    const orderDetails = {
+      salesMan:userData._id,
+      paymentMode:"online",
+      customerName:customerName,
+      customerMobileNumber:mobileNumber,
+      customerEmail:email,
+      orderDetails:{
+        productsDetails:selectedProducts,
+        discountPercentagePerUnit, 
+        discountAmountPerUnit, 
+        totalDiscountGivenInOverall, 
+        calculatedTotalDiscountOfAllDiscount, 
+        selectItemsTotal,
+      }
+    }
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/order/online/create`,orderDetails,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response )
+      if (response.status === 200) {
+          window.location.href=response?.data?.session?.url;
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
   return (
     <div className="d-flex bg-white">

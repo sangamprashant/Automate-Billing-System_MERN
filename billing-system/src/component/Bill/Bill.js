@@ -1,10 +1,12 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import QRCode from "qrcode.react";
 import "./Bill.css";
+import { AppContext } from "../../AppContext";
 
 function Bill() {
+  const { userData } = useContext(AppContext);
   const { id } = useParams();
   const [order, setOrder] = useState();
   const [currentURL, setCurrentURL] = useState("");
@@ -30,24 +32,22 @@ function Bill() {
     } catch (error) {}
   };
 
-    // Function to handle arrow button click
-    const handleArrowButtonClick = () => {
-        // Implement the desired behavior, e.g., go back to the previous page
-        window.history.back();
-      };
+  // Function to handle arrow button click
+  const handleArrowButtonClick = () => {
+    window.history.back();
+  };
 
-      console.log(currentURL)
+  console.log(currentURL);
 
   return (
     <div className="d-flex justify-content-center my-4">
       {order && (
         <div className="bill-container border shadow bg-white p-4">
-        <button
-            className="arrow-button"
-            onClick={handleArrowButtonClick}
-          >
-            &#8592; Back
-          </button>
+          {userData && (
+            <button className="arrow-button" onClick={handleArrowButtonClick}>
+              &#8592; Back
+            </button>
+          )}
           <div className="mt-5">
             <hr className="bill-boundary" />
             <h1 className="text-dark-blue bill-heading mb-4">
@@ -78,14 +78,16 @@ function Bill() {
                 <div>{order.customerName}</div>
                 <div>{order.customerMobileNumber}</div>
                 <div>{order.customerEmail}</div>
-                <div><b>Payment mode:</b> {order.paymentMode}</div>
+                <div>
+                  <b>Payment mode:</b> {order.paymentMode}
+                </div>
                 <div>
                   <b>Invoice Number</b> :{order.orderId}
                 </div>
                 <td>
                   <b>Issued Date</b>
                 </td>
-                <td>: 27/12/2000</td>
+                <td>: {order.purchaseDate}</td>
               </i>
             </div>
           </div>
@@ -139,29 +141,33 @@ function Bill() {
             <div>
               <div>
                 <strong>Total Amount:</strong>{" "}
-                {(order.orderDetails.selectItemsTotal).toFixed(2)}
+                {order.orderDetails.selectItemsTotal.toFixed(2)}
               </div>
 
               <div>
                 <strong>Disc%PU:</strong> %
-                {(order.orderDetails.discountPercentagePerUnit).toFixed(2)}
+                {order.orderDetails.discountPercentagePerUnit.toFixed(2)}
               </div>
               <div>
                 <strong>Dics Amt PU:</strong> $
-                {(order.orderDetails.discountAmountPerUnit).toFixed(2)}
+                {order.orderDetails.discountAmountPerUnit.toFixed(2)}
               </div>
               <div>
                 <strong>Overall Disc Amt:</strong> $
-                {(order.orderDetails.totalDiscountGivenInOverall).toFixed(2)}
+                {order.orderDetails.totalDiscountGivenInOverall.toFixed(2)}
               </div>
               <div>
                 <strong>Total Discount:</strong> $
-                {(order.orderDetails.calculatedTotalDiscountOfAllDiscount).toFixed(2)}
+                {order.orderDetails.calculatedTotalDiscountOfAllDiscount.toFixed(
+                  2
+                )}
               </div>
               <div>
                 <strong>Total Amount Paid:</strong> $
-                {(order.orderDetails.selectItemsTotal -
-                  order.orderDetails.calculatedTotalDiscountOfAllDiscount).toFixed(2)}
+                {(
+                  order.orderDetails.selectItemsTotal -
+                  order.orderDetails.calculatedTotalDiscountOfAllDiscount
+                ).toFixed(2)}
               </div>
             </div>
           </div>

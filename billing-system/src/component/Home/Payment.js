@@ -178,6 +178,7 @@ function Payment({
             </h5>
             <div className="d-flex mb-2 gap-3">
               <input
+                name="name"
                 className="form-control"
                 placeholder="Enter customer's name"
                 value={customerName}
