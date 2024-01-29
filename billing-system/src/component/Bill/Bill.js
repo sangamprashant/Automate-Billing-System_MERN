@@ -54,7 +54,6 @@ function Bill() {
               <b>INVOICE</b>
             </h1>
           </div>
-
           <div className="d-flex justify-content-between">
             {/* company side */}
             <div>
@@ -91,11 +90,8 @@ function Bill() {
               </i>
             </div>
           </div>
-
           <hr />
-
           <h3>Products Purchased</h3>
-
           <div className="product-list">
             <table
               className="table table-hover table-borderless"
@@ -133,6 +129,7 @@ function Bill() {
               </tbody>
             </table>
           </div>
+
           <hr className="bill-boundary" />
           <div className="total-section">
             <div>
@@ -143,7 +140,7 @@ function Bill() {
                 <strong>Total Amount:</strong>{" "}
                 {order.orderDetails.selectItemsTotal.toFixed(2)}
               </div>
-
+              <hr className="bill-boundary" />
               <div>
                 <strong>Disc%PU:</strong> %
                 {order.orderDetails.discountPercentagePerUnit.toFixed(2)}
@@ -162,7 +159,8 @@ function Bill() {
                   2
                 )}
               </div>
-              <div>
+              <hr className="bill-boundary" />
+              <div className="d-flex justify-content-end">
                 <strong>Total Amount Paid:</strong> $
                 {(
                   order.orderDetails.selectItemsTotal -

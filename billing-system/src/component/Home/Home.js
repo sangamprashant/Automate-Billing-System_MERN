@@ -108,23 +108,22 @@ function Home() {
     }
   };
 
-  const handelCashPayment = async () => {
-    message.success("Cash Payment")
-    const orderDetails = {
-      salesMan:userData._id,
-      paymentMode:"cash",
-      customerName:customerName,
-      customerMobileNumber:mobileNumber,
-      customerEmail:email,
-      orderDetails:{
-        productsDetails:selectedProducts,
-        discountPercentagePerUnit, 
-        discountAmountPerUnit, 
-        totalDiscountGivenInOverall, 
-        calculatedTotalDiscountOfAllDiscount, 
-        selectItemsTotal,
-      }
+  const orderDetails = {
+    salesMan:userData?._id,
+    paymentMode:"cash",
+    customerName:customerName,
+    customerMobileNumber:mobileNumber,
+    customerEmail:email,
+    orderDetails:{
+      productsDetails:selectedProducts,
+      discountPercentagePerUnit, 
+      discountAmountPerUnit, 
+      totalDiscountGivenInOverall, 
+      calculatedTotalDiscountOfAllDiscount, 
+      selectItemsTotal,
     }
+  }
+  const handelCashPayment = async () => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/order/cash/create`,orderDetails,
       {
@@ -142,37 +141,76 @@ function Home() {
       console.log("Error in creating the order",error)
       message.error("failed to create the order")
     }
-    console.log(orderDetails)
   }
 
+  //loading the payment script:
+  function loadScript(src) {
+    return new Promise((resolve) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = () => {
+            resolve(true);
+        };
+        script.onerror = () => {
+            resolve(false);
+        };
+        document.body.appendChild(script);
+    });
+  }
   const handelOnlinePayment = async () => {
-    message.success("Online Payment")
-    const orderDetails = {
-      salesMan:userData._id,
-      paymentMode:"online",
-      customerName:customerName,
-      customerMobileNumber:mobileNumber,
-      customerEmail:email,
-      orderDetails:{
-        productsDetails:selectedProducts,
-        discountPercentagePerUnit, 
-        discountAmountPerUnit, 
-        totalDiscountGivenInOverall, 
-        calculatedTotalDiscountOfAllDiscount, 
-        selectItemsTotal,
-      }
-    }
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/order/online/create`,orderDetails,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+    if (!res) {
+      alert("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/order/online/create`,orderDetails,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.status === 200) {
+      // window.location.href=response?.data?.session?.url;
+      const { amount, id: order_id, currency,receipt } = response.data.razorpayOrder;
+      const options = {
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID, // Enter the Key ID generated from the Dashboard
+        amount: amount.toString(),
+        currency: currency,
+        name: customerName,
+        image: "http://localhost:3000/logo.png",
+        order_id: order_id,
+        handler: async function (response) {
+          const data = {
+            orderCreationId: order_id,
+            receipt:receipt,
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpayOrderId: response.razorpay_order_id,
+            razorpaySignature: response.razorpay_signature,
+          };
+          const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/order/payment/success`, data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (result.data.success) {
+            message.success(result.data.message || "Payment done.")
+            navigate(`/bill/${receipt}`)
+          }
         },
-      });
-      console.log(response )
-      if (response.status === 200) {
-          window.location.href=response?.data?.session?.url;
-      }
+        prefill: {
+          name: customerName,
+          email: email,
+          contact: mobileNumber,
+        },
+        theme: {
+          color: "#000000",
+        },
+      };
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    }
     } catch (error) {
       console.log(error)
     }

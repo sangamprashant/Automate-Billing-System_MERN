@@ -13,43 +13,41 @@ function Login() {
   const [isEnrolling, setIsEnrolling] = useState(false);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
+  useEffect(async () => {
+    const timer = setTimeout(async () => {
       if (fio) {
-        handleLogIn();
+        await handleLogIn();
       }
     }, 1000);
     return () => clearTimeout(timer);
   }, [fio]);
 
-  const handleEnroll = async () => {
-    try {
-      const response = await fio.enroll();
-      message.success("face id created");
-      console.log("REsponse from faceAPI", response);
-      const dbBody = {
-        faceId: response.facialId,
-      };
+  // const handleEnroll = async () => {
+  //   try {
+  //     const response = await fio.enroll();
+  //     message.success("face id created");
+  //     console.log("REsponse from faceAPI", response);
+  //     const dbBody = {
+  //       faceId: response.facialId,
+  //     };
 
-      // Send enrollment data to backend for storage
-      const dbREsponse = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/api/user/register`,
-        dbBody
-      );
+  //     // Send enrollment data to backend for storage
+  //     const dbREsponse = await axios.post(
+  //       `${process.env.REACT_APP_BASE_URL}/api/user/register`,
+  //       dbBody
+  //     );
 
-      if (dbREsponse.status === 200) {
-        console.log("Registered successfully");
-      }
-      console.log("Enrollment successful!");
-      setIsEnrolling(false);
-    } catch (error) {
-      handleError(error);
-      setError(error);
-      setIsEnrolling(false);
-    }
-  };
+  //     if (dbREsponse.status === 200) {
+  //       console.log("Registered successfully");
+  //     }
+  //     console.log("Enrollment successful!");
+  //     setIsEnrolling(false);
+  //   } catch (error) {
+  //     handleError(error);
+  //     setIsEnrolling(false);
+  //   }
+  // };
 
   const handleLogIn = async () => {
     try {
@@ -119,7 +117,6 @@ function Login() {
             </button>
           </form>
         )}
-        {error && <div className="error-message">{error.message}</div>}
       </div>
     </div>
   );

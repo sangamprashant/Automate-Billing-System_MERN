@@ -1,12 +1,10 @@
 
 const nodemailer = require("nodemailer");
 
-
-
 const EmailBill = async (order) => {
   // Create a nodemailer transporter using your email service credentials
   const transporter = nodemailer.createTransport({
-    service: "gmail", // e.g., 'gmail'
+    service: "gmail",
     auth: {
       user: process.env.EMAIL,
       pass: process.env.EMAIL_PASSWORD,
@@ -62,6 +60,8 @@ const EmailBill = async (order) => {
           align-items: end;
           justify-content: space-between;
           margin-top: 20px;
+          gap: 10px;
+          align-items: center;
         }
         .d-flex {
           display: flex;
@@ -104,7 +104,7 @@ const EmailBill = async (order) => {
             <hr class="bill-boundary" />
             <h1 class="text-dark-blue bill-heading mb-4"><b style="color: #0000dc;">INVOICE</b></h1>
           </div>
-          <table class="table">
+          <table class="table" style="width: 100%;">
             <tbody>
               <tr class="d-flex-justify-content-between">
                 <td>
@@ -178,6 +178,7 @@ const EmailBill = async (order) => {
                 <strong>Total Amount:</strong>
                 ${(order.orderDetails.selectItemsTotal).toFixed(2)}
               </div>
+              <hr class="bill-boundary" />
               <div>
                 <strong>Disc%PU:</strong>
                 ${(order.orderDetails.discountPercentagePerUnit).toFixed(2)}
@@ -194,6 +195,7 @@ const EmailBill = async (order) => {
                 <strong>Total Discount:</strong>
                 ${(order.orderDetails.calculatedTotalDiscountOfAllDiscount).toFixed(2)}
               </div>
+              <hr class="bill-boundary" />
               <div>
                 <strong>Total Amount Paid:</strong>
                 ${(order.orderDetails.selectItemsTotal -
@@ -213,10 +215,8 @@ const EmailBill = async (order) => {
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.error(error);
-      // res.status(500).send("Internal Server Error");
     } else {
       console.log("Email sent: " + info.response);
-      // res.status(200).send("Email sent successfully");
     }
   });
 };

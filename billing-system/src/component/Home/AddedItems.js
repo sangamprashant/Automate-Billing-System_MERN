@@ -179,11 +179,6 @@ function AddedItems({
         <div className="d-flex justify-content-end">
           {/* buttons */}
           <Space size={[8, 16]} wrap className="justify-content-center">
-            <Tooltip title="Go to admin pannel"  >
-              <button className="btn btn-danger" disabled={goToPayment} >
-                Admin Pannel
-              </button>
-            </Tooltip>
             <Tooltip title="Reset the billing items" onClick={handleReset}>
               <button className="btn btn-primary" disabled={goToPayment} >
                 Reset
@@ -194,11 +189,11 @@ function AddedItems({
                 <UndoIcon />
               </button>
             </Tooltip>
-            <Tooltip title="Redo" onClick={handleRedo}>
+            {/* <Tooltip title="Redo" onClick={handleRedo}>
               <button className="btn btn-primary" disabled={goToPayment} >
                 <RedoIcon />
               </button>
-            </Tooltip>
+            </Tooltip> */}
           </Space>
         </div>
       </div>
@@ -243,7 +238,6 @@ function AddedItems({
               <td className="box-cell-top bg-primary text-white shadow">
                 TOTAL
               </td>
-              <td className="box-cell-top bg-primary text-white shadow">TAX</td>
               <td className="box-cell-top bg-primary text-white shadow ">
                 TOTAL BILL AMT
               </td>
@@ -258,7 +252,6 @@ function AddedItems({
               <td className="box-cell-bottom shadow">
               ₹{selectItemsTotal.toFixed(2)}
               </td>
-              <td className="box-cell-bottom shadow">0.00%</td>
               <td className="box-cell-bottom shadow">₹{(selectItemsTotal - calculatedTotalDiscountOfAllDiscount).toFixed(2)}</td>
             </tr>
           </tbody>

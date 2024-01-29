@@ -3,16 +3,23 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const Order = require("../models/orders");
 const ProductModel = require("../models/product");
 const { EmailBill } = require("../Email/bill");
-const stripe = require("stripe")(process.env.STRIPE_SECRIT_KEY);
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
 
 const router = express.Router();
 
+// Initialize Razorpay
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_SECRET_KEY,
+});
+
 // Route to create an order using cash (POST)
-router.post("/cash/create", async (req, res) => {
+router.post("/cash/create", authMiddleware, async (req, res) => {
   try {
     // Extract data from the request body
     const {
-      salesMan,
+      userId: salesMan,
       paymentMode,
       customerName,
       customerMobileNumber,
@@ -89,11 +96,11 @@ router.post("/cash/create", async (req, res) => {
 });
 
 //router to make payment online
-router.post("/online/create", async (req, res) => {
+router.post("/online/create", authMiddleware, async (req, res) => {
   try {
     // Extract data from the request body
     const {
-      salesMan,
+      userId: salesMan,
       customerName,
       customerMobileNumber,
       customerEmail,
@@ -139,54 +146,94 @@ router.post("/online/create", async (req, res) => {
     // Save the order to the database
     const savedOrder = await newOrder.save();
 
-    let line_items = [];
-    for (const productDetails of savedOrder.orderDetails.productsDetails) {
+    let total = Number(
+      (
+        orderDetails.selectItemsTotal -
+        orderDetails.calculatedTotalDiscountOfAllDiscount
+      ).toFixed(2)
+    );
+    const razorpayOrder = await razorpay.orders.create({
+      amount: total * 100, // Amount in paise needed to be multiplied
+      currency: "INR",
+      receipt: savedOrder._id.toString(),
+    });
 
-      let discounted = productDetails.p_price - ((productDetails.p_price * Number(orderDetails.discountPercentagePerUnit)) / 100)
-      discounted -= Number(orderDetails.discountAmountPerUnit)
-    
-      // Round to two decimal places
-      // discounted = Number(discounted.toFixed(2));
-      discounted = Number(discounted.toFixed(2));
-    
-      // Ensure productDetails.p_image is an array
-      const images = Array.isArray(productDetails.p_image) ? productDetails.p_image : [productDetails.p_image];
-    
-      line_items.push({
-        quantity: productDetails.p_count,
-        price_data: {
-          currency: "inr",
-          product_data: {
-            name: productDetails.p_name,
-            images: images, // Ensure it's an array
-          },
-          unit_amount: discounted * 100,
-        },
-      });
-    }
-    console.log(line_items)
-    if (newOrder._id) {
-      const session = await stripe.checkout.sessions.create({
-        line_items,
-        mode: "payment",
-        customer_email: customerEmail,
-        success_url: `${process.env.PUBLIC_DOMAIN}/cart?success=1`,
-        cancel_url: `${process.env.PUBLIC_DOMAIN}/cart?failed=1`,
-        metadata: { orderId: newOrder?._id.toString(), test: "ok" },
-      });
-      return res
-        .status(200)
-        .json({ message: "Payment session created", session });
-    } else {
-      console.log("no id of order");
-    }
-
-    //function to send Email to user
-    // EmailBill(newOrder)
-
-
+    return res
+      .status(200)
+      .json({ message: "Payment session created", razorpayOrder });
   } catch (error) {
     console.error("Error creating order:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+router.post("/payment/success", authMiddleware, async (req, res) => {
+  try {
+    const {
+      orderCreationId,
+      razorpayPaymentId,
+      razorpayOrderId,
+      razorpaySignature,
+      receipt,
+    } = req.body;
+
+    const shasum = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET_KEY);
+    shasum.update(`${orderCreationId}|${razorpayPaymentId}`);
+    const digest = shasum.digest("hex");
+
+    if (digest !== razorpaySignature)
+      return res
+        .status(400)
+        .json({ success: false, message: "Transaction not legit!" });
+
+    const order = await Order.findOne({ _id: receipt });
+
+    if (!order) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
+    }
+
+    // Update the order status to "success"
+    order.orderStatus = "success";
+    await order.save();
+
+    // Reduce the stock of each product in the order
+    for (const productDetails of order.orderDetails.productsDetails) {
+      const { _id, p_count } = productDetails;
+      const product = await ProductModel.findById(_id);
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: `Product with ID ${_id} not found`,
+        });
+      }
+
+      // Check if there is sufficient stock
+      if (product.p_stock < p_count) {
+        return res.status(404).json({
+          success: false,
+          message: `Insufficient stock for product with ID ${_id}`,
+        });
+      }
+
+      // Reduce the stock
+      product.p_stock -= p_count;
+      await product.save();
+    }
+
+    // Responding with a success message and relevant details
+    EmailBill(order);
+    res.json({
+      message: "Payment done.",
+      orderId: razorpayOrderId,
+      paymentId: razorpayPaymentId,
+      success: true,
+      order: order,
+    });
+  } catch (error) {
+    console.error("Error processing payment:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
@@ -210,35 +257,5 @@ router.get("/single/:orderId", async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
-
-
-router.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
-  const sig = request.headers['stripe-signature'];
-
-  let event;
-
-  try {
-    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-  } catch (err) {
-    response.status(400).send(`Webhook Error: ${err.message}`);
-    return;
-  }
-
-  // Handle the event
-  switch (event.type) {
-    case 'payment_intent.succeeded':
-      const paymentIntentSucceeded = event.data.object;
-      console.log(paymentIntentSucceeded)
-      // Then define and call a function to handle the event payment_intent.succeeded
-      break;
-    // ... handle other event types
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
-
-  // Return a 200 response to acknowledge receipt of the event
-  response.send();
-});
-
 
 module.exports = router;

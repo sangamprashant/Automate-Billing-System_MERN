@@ -91,12 +91,6 @@ function ProductSection({
           <h2>{categorySelected}</h2>
         </div>
         <div className="d-flex gap-2">
-          <button
-            className="btn btn-primary bg-primary crusor-disabled"
-            style={{ cursor: "no-drop" }}
-          >
-            18% GST
-          </button>
           <button className="btn btn-danger" onClick={handleLogout}>
             Logout <LogoutIcon />
           </button>
