@@ -1,75 +1,49 @@
-import { message } from "antd";
+const handleError = (error) => {
+  switch (error) {
+    case fioErrCode.PERMISSION_REFUSED:
+      return "Access to the Camera stream was denied by the end user";
+    case fioErrCode.NO_FACES_DETECTED:
+      return "No faces were detected during the enroll or authentication process";
+    case fioErrCode.UNRECOGNIZED_FACE:
+      return "Unrecognized face on this application's Facial Index";
+    case fioErrCode.MANY_FACES:
+      return "Two or more faces were detected during the scan process";
+    case fioErrCode.FACE_DUPLICATION:
+      return "User enrolled previously (facial features already recorded). Cannot enroll again!";
+    case fioErrCode.PAD_ATTACK:
+      return "Presentation (Spoof) Attack (PAD) detected during the scan process";
+    case fioErrCode.FACE_MISMATCH:
+      return "Calculated Facial Vectors of the user being enrolled do not match";
+    case fioErrCode.WRONG_PIN_CODE:
+      return "Wrong PIN code supplied by the user being authenticated";
+    case fioErrCode.PROCESSING_ERR:
+      return "Server side error";
+    case fioErrCode.UNAUTHORIZED:
+      return "Your application is not allowed to perform the requested operation (e.g., Invalid ID, Blocked, Paused, etc.). Refer to the FACEIO Console for additional information";
+    case fioErrCode.TERMS_NOT_ACCEPTED:
+      return "Terms & Conditions set out by FACEIO/host application rejected by the end user";
+    case fioErrCode.UI_NOT_READY:
+      return "The FACEIO Widget could not be (or is being) injected onto the client DOM";
+    case fioErrCode.SESSION_EXPIRED:
+      return "Client session expired. The first promise was already fulfilled but the host application failed to act accordingly";
+    case fioErrCode.TIMEOUT:
+      return "Ongoing operation timed out (e.g., Camera access permission, ToS accept delay, Face not yet detected, Server Reply, etc.)";
+    case fioErrCode.TOO_MANY_REQUESTS:
+      return "Widget instantiation requests exceeded for freemium applications. Does not apply for upgraded applications";
+    case fioErrCode.EMPTY_ORIGIN:
+      return "Origin or Referer HTTP request header is empty or missing";
+    case fioErrCode.FORBIDDEN_ORIGIN:
+      return "Domain origin is forbidden from instantiating faceIo.js";
+    case fioErrCode.FORBIDDEN_COUNTRY:
+      return "Country ISO-3166-1 Code is forbidden from instantiating faceIo.js";
+    case fioErrCode.SESSION_IN_PROGRESS:
+      return "Another authentication or enrollment session is in progress";
+    case fioErrCode.NETWORK_IO:
+    default:
+      return "Error while establishing a network connection with the target FACEIO processing node";
+  }
+};
 
-function handleError(errCode) {
-    switch (errCode) {
-        case 1:
-            message.error("Access to the Camera stream was denied by the end user");
-            break;
-        case 2:
-            message.error("No faces were detected during the enroll or authentication process");
-            break;
-        case 3:
-            message.error("Unrecognized face on this application's Facial Index");
-            break;
-        case 4:
-            message.error("Two or more faces were detected during the scan process");
-            break;
-        case 5:
-            message.error("User enrolled previously (facial features already recorded). Cannot enroll again!");
-            break;
-        case 6:
-            message.error("Minors are not allowed to enroll on this application!");
-        break;
-        case 7:
-            message.error("Presentation (Spoof) Attack (PAD) detected during the scan process");
-            break;
-        case 8:
-            message.error("Calculated Facial Vectors of the user being enrolled do not matches");
-            break;
-        case 9:
-            message.error("Wrong PIN code supplied by the user being authenticated");
-            break;
-        case 10:
-            message.error("Server side error");
-            break;
-        case 11:
-            message.error("Your application is not allowed to perform the requested operation (eg. Invalid ID, Blocked, Paused, etc.). Refer to the FACEIO Console for additional information");
-            break;
-        case 12:
-            message.error("Terms & Conditions set out by FACEIO/host application rejected by the end user");
-            break;
-        case 13:
-            message.error("The FACEIO Widget could not be (or is being) injected onto the client DOM");
-            break;
-        case 14:
-            message.error("Client session expired. The first promise was already fulfilled but the host application failed to act accordingly");
-            break;
-        case 15:
-            message.error("Ongoing operation timed out (eg, Camera access permission, ToS accept delay, Face not yet detected, Server Reply, etc.)");
-            break;
-        case 16:
-            message.error("Widget instantiation requests exceeded for freemium applications. Does not apply for upgraded applications");
-            break;
-        case 17:
-            message.error("Origin or Referer HTTP request header is empty or missing");
-            break;
-        case 18:
-            message.error("Domain origin is forbidden from instantiating fio.js");
-            break;
-        case 19:
-            message.error("Country ISO-3166-1 Code is forbidden from instantiating fio.js");
-            break;
-        case 20:
-            message.error("Another authentication or enrollment session is in progress");
-            break;
-        case 21:
-            break;
-        default:
-            message.error("Error while establishing network connection with the target FACEIO processing node");
-            break;
-    }
-}
-
-export {
-    handleError
+export{
+  handleError
 }

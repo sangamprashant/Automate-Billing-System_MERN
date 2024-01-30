@@ -5,58 +5,49 @@ import faceIO from "@faceio/fiojs";
 import { useNavigate } from "react-router-dom";
 import { handleError } from "./errorByFACEID";
 import { AppContext } from "../../AppContext";
+import { BannerImg } from "../../assets/image";
+import "./Authentication.css";
 
 const fio = new faceIO(process.env.REACT_APP_PUBLIC_ID);
 
 function Login() {
   const { token, setToken, isLogged, setIsLogged } = useContext(AppContext);
-  const [isEnrolling, setIsEnrolling] = useState(false);
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
 
-  useEffect(async () => {
-    const timer = setTimeout(async () => {
-      if (fio) {
-        await handleLogIn();
-      }
+  const [countdown, setCountdown] = useState(5); // Initial countdown time
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prevCountdown) =>
+        prevCountdown > 0 ? prevCountdown - 1 : 0
+      );
     }, 1000);
-    return () => clearTimeout(timer);
+
+    return () => {
+      if (fio && typeof fio.destroy === "function") {
+        fio.destroy();
+      }
+      clearInterval(timer);
+    };
   }, [fio]);
 
-  // const handleEnroll = async () => {
-  //   try {
-  //     const response = await fio.enroll();
-  //     message.success("face id created");
-  //     console.log("REsponse from faceAPI", response);
-  //     const dbBody = {
-  //       faceId: response.facialId,
-  //     };
-
-  //     // Send enrollment data to backend for storage
-  //     const dbREsponse = await axios.post(
-  //       `${process.env.REACT_APP_BASE_URL}/api/user/register`,
-  //       dbBody
-  //     );
-
-  //     if (dbREsponse.status === 200) {
-  //       console.log("Registered successfully");
-  //     }
-  //     console.log("Enrollment successful!");
-  //     setIsEnrolling(false);
-  //   } catch (error) {
-  //     handleError(error);
-  //     setIsEnrolling(false);
-  //   }
-  // };
+  useEffect(() => {
+    if (countdown === 0) {
+      // Start face recognition when countdown reaches 0
+      handleLogIn();
+    }
+  }, [countdown]);
 
   const handleLogIn = async () => {
     try {
       let response = await fio.authenticate({
         locale: "auto",
       });
-      handelDbLogin(response.facialId);
+      if (response) {
+        handelDbLogin(response?.facialId);
+      }
     } catch (error) {
-      handleError(error);
+      message.error(handleError(error));
       console.log(error);
     }
   };
@@ -85,39 +76,54 @@ function Login() {
     }
   };
 
+  const handelReload = () => {
+    fio.restartSession();
+    setCountdown(5);
+  };
+
   return (
     <div className="main-container">
-      <div className="">
-        {isEnrolling ? (
-          <div>Enrolling user...</div>
-        ) : (
-          <form className="form border shadow p-5">
-            <h2 className="text-center mb-3">REGISTER</h2>
-            <div className="mb-3">
-              <input
-                className="form-control"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <button
-              type="button"
-              className="shadow btn btn-primary px-5 w-100"
-              onClick={handleEnroll}
-            >
-              Register
-            </button>
-            <button
-              type="button"
-              className="shadow btn btn-primary px-5 w-100 mt-4"
-              onClick={handleLogIn}
-            >
-              Login
-            </button>
-          </form>
-        )}
-      </div>
+      <form className="form border shadow p-5 col-md-7">
+        <h2 className="text-center mb-3">
+          WELCOME TO <br /> OUR AUTOMATIC BILLING SYSTEM
+        </h2>
+        <div className="row align-items-center">
+          <div className="col-md-4">
+            <img src={BannerImg} width="100%" alt="Banner" />
+          </div>
+          <div className="col-md-8">
+            <ul>
+              <li>
+                Revolutionizing billing systems with MERN, faceIO, Firebase, and
+                Twilio.
+              </li>
+              <li>
+                Automated face authentication and QR scanner for seamless
+                payments.
+              </li>
+              <li>
+                Integration with Razorpay for quick and efficient transactions.
+              </li>
+              <li>
+                Real-time bills sent via email and SMS for your convenience.
+              </li>
+            </ul>
+          </div>
+        </div>
+        <hr className="line-bold" />
+        <p className="text-center text-success">
+          Opening the face recognition window in {countdown} seconds...
+        </p>
+        <div className="d-flex justify-content-end">
+          <button
+            type="button"
+            className="shadow btn btn-primary px-5 mt-4"
+            onClick={handleLogIn}
+          >
+            Login
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

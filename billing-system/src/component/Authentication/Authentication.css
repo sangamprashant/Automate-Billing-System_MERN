@@ -1,1 +1,4 @@
-
+.line-bold {
+  border: 5px solid #999eff;
+  margin: 10px 0;
+}

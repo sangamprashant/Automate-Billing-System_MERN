@@ -32,12 +32,9 @@ function Bill() {
     } catch (error) {}
   };
 
-  // Function to handle arrow button click
   const handleArrowButtonClick = () => {
     window.history.back();
   };
-
-  console.log(currentURL);
 
   return (
     <div className="d-flex justify-content-center my-4">

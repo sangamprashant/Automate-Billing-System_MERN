@@ -11,7 +11,7 @@ import {
   Home,
   Loading,
   Login,
-  Register,
+  // Register,
   Welcome,
 } from "./component";
 import { useEffect, useState } from "react";
