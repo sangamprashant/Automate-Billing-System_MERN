@@ -2,6 +2,7 @@ import React from "react";
 import SideNav from "../SideNav/SideNav";
 import { AssignmentIndIcon, Inventory2Icon } from "../../../assets/icons";
 import "./AdminDashboard.css";
+import Clock from "./Clock";
 
 function AdminDashboard() {
   return (
@@ -10,23 +11,18 @@ function AdminDashboard() {
         <h1 className="dashboard-title">Dashboard</h1>
         <hr />
         <div className="dashboard-cards row mt-4">
-          <div className="col-md-6 p-2">
-            <div className="card p-4 text-center dashboard-card">
-              <div className="icon-box">
-                <AssignmentIndIcon className="dashboard-icon" color="primary" />
-              </div>
-              <h3 className="dashboard-value">23</h3>
-              <h5 className="dashboard-label">Operators</h5>
+          <div className="col-md-4">
+            <div className="d-flex justify-content-center ">
+              <img width={300} height={300} className="object-fit-cover" />
             </div>
+            <h4 className="mt-3">Profile</h4>
+            <div>NAME NF</div>
+            <div>rOLL</div>
+            <div>smail</div>
           </div>
-          <div className="col-md-6 p-2">
-            <div className="card p-4 text-center dashboard-card">
-              <div className="icon-box">
-                <Inventory2Icon className="dashboard-icon" color="primary" />
-              </div>
-              <h3 className="dashboard-value">23</h3>
-              <h5 className="dashboard-label">Products</h5>
-            </div>
+          <div className="col-md-8 p-2">
+            <h1 className="mb-5">Welcome Admin,</h1>
+            <Clock />
           </div>
         </div>
       </div>

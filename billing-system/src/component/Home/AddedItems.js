@@ -3,6 +3,7 @@ import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
 import AddIcon from "@mui/icons-material/Add";
 import RedoIcon from "@mui/icons-material/Redo";
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import UndoIcon from "@mui/icons-material/Undo";
 import SearchIcon from "@mui/icons-material/Search";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
@@ -10,6 +11,7 @@ import ReplayIcon from "@mui/icons-material/Replay";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../AppContext";
+import Scanner from "./Scanner";
 
 function AddedItems({ 
   selectedProducts, 
@@ -28,6 +30,7 @@ function AddedItems({
   setSelectItemsTotal,
   qtyCount ,
   setQtyCount,
+  setIsScannerOpen,
 }) {
   const { isLogged, setIsLogged, goToPayment, setGoToPayment } =
     useContext(AppContext);
@@ -123,6 +126,11 @@ function AddedItems({
                   <SearchIcon />
                 </button>
                 {/* <button className="btn btn-primary" disabled={goToPayment}><AddIcon/></button> */}
+              </td>
+              <td className="d-flex  align-items-center">
+                <button className="btn btn-primary" disabled={goToPayment} onClick={()=>setIsScannerOpen(true)}>
+                  <QrCodeScannerIcon />
+                </button>
               </td>
             </tr>
           </tbody>

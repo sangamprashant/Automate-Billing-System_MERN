@@ -8,6 +8,7 @@ import { AppContext } from "../../AppContext";
 import { message } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Scanner from "./Scanner";
 
 function Home() {
   const navigate = useNavigate()
@@ -43,6 +44,9 @@ function Home() {
   const [customerName, setCustomerName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [email, setEmail] = useState("");
+  //scanner 
+  const [isScannerOpen,setIsScannerOpen] = useState(false)
+  const [scanResult, setScanResult] = useState(null);
 
   useEffect(() => {
     // Save the current selected products to history
@@ -235,6 +239,7 @@ function Home() {
         setSelectItemsTotal={setSelectItemsTotal}
         qtyCount={qtyCount} 
         setQtyCount={setQtyCount}
+        setIsScannerOpen={setIsScannerOpen}
       />
       {!goToPayment ? (
         <>
@@ -249,6 +254,12 @@ function Home() {
             selectedProducts={selectedProducts}
             setSelectedProducts={setSelectedProducts}
           />
+          {isScannerOpen&&<Scanner 
+            setIsScannerOpen={setIsScannerOpen}
+            isScannerOpen={isScannerOpen}
+            scanResult={scanResult} 
+            setScanResult={setScanResult}
+          />}
         </>
       ) : (
         <Payment 
