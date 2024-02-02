@@ -258,4 +258,27 @@ router.get("/single/:orderId", async (req, res) => {
   }
 });
 
+// getting oredes by status and mode
+router.get("/details/:mode/:status", authMiddleware, async (req, res) => {
+  try {
+    const { mode, status } = req.params;
+    const orders = await Order.find({
+      paymentMode:mode,
+      orderStatus:status
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Data fetched successfully",
+      orders: orders.reverse(),
+    });
+  } catch (error) {
+    console.log("Falied to fetch the orders", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+});
+
 module.exports = router;

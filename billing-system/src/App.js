@@ -11,6 +11,7 @@ import {
   Home,
   Loading,
   Login,
+  Orders,
   // Register,
   Welcome,
 } from "./component";
@@ -98,6 +99,7 @@ function App() {
             <Route path="/admin/products" element={<AdminProduct />} />
             <Route path="/admin/categories" element={<AdminCategories />} />
             <Route path="/admin/profile" element={<AdminProfile />} />
+            <Route path="/admin/orders" element={<Orders />} />
           </Routes>
         </>
       )}
