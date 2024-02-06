@@ -70,8 +70,32 @@ const userDataController = async (req, res) => {
   }
 };
 
+const operatorsListController = async (req, res) => {
+  try {
+    const { type } = req.params;
+    const query = type === "admin" ? true : false;
+
+    const operators = await userModel.find({
+      isAdmin: query,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Operators found",
+      operators: operators,
+    });
+  } catch (error) {
+    console.log("Failed to fetch the operators:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch the operators",
+    });
+  }
+};
+
 module.exports = {
   loginController,
   registerController,
   userDataController,
+  operatorsListController,
 };

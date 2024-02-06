@@ -11,6 +11,7 @@ import {
   Home,
   Loading,
   Login,
+  OperatorProfile,
   Orders,
   // Register,
   Welcome,
@@ -96,6 +97,7 @@ function App() {
             {/* admin */}
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/operators" element={<AdminOperators />} />
+            <Route path="/admin/operators/:id" element={<OperatorProfile />} />
             <Route path="/admin/products" element={<AdminProduct />} />
             <Route path="/admin/categories" element={<AdminCategories />} />
             <Route path="/admin/profile" element={<AdminProfile />} />

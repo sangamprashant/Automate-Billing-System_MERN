@@ -1,12 +1,34 @@
-import React, { useState } from "react";
+import React from "react";
 import SideNav from "../SideNav/SideNav";
 import { VisibilityIcon } from "../../../assets/icons";
-import { Tooltip } from "antd";
+import { Tooltip, message } from "antd";
 import AllOperators from "./AllOperators";
 import AddOperator from "./AddOperator";
+import axios from "axios";
 
 function AdminOperators() {
-  const [frame, setFrame] = useState("all"); // Default to "all"
+  const [frame, setFrame] = React.useState("all");
+  const [tableData, setTableData] = React.useState([]);
+
+  React.useEffect(() => {
+    fetchOperators();
+  }, []);
+
+  const fetchOperators = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/api/user/opertatos/operators`
+      );
+      if (response.data.success) {
+        setTableData(response.data.operators);
+      } else {
+        message.error(response.data.message || "Failed to fetch the operators");
+      }
+    } catch (error) {
+      console.log("failed to fetch the operators", error);
+      message.error(error.response.data.message || "Server error");
+    }
+  };
 
   const renderSelectedFrame = () => {
     switch (frame) {
@@ -18,14 +40,6 @@ function AdminOperators() {
         return <AllOperators tableData={tableData} />;
     }
   };
-
-  const tableData = [
-    { name: "somesh1", email: "somaes.opprator@gmail.com" },
-    { name: "somesh2", email: "somaes.opprator@gmail.com" },
-    { name: "somesh3", email: "somaes.opprator@gmail.com" },
-    { name: "somesh4", email: "somaes.opprator@gmail.com" },
-    { name: "somesh5", email: "somaes.opprator@gmail.com" },
-  ];
 
   return (
     <SideNav>

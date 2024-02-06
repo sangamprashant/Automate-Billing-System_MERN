@@ -281,4 +281,26 @@ router.get("/details/:mode/:status", authMiddleware, async (req, res) => {
   }
 });
 
+// Route to get order counts by payment mode and order status
+router.get("/orderCounts", async (req, res) => {
+  try {
+    const orderCounts = await Order.aggregate([
+      {
+        $group: {
+          _id: {
+            paymentMode: "$paymentMode",
+            orderStatus: "$orderStatus",
+          },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    res.json({ success: true, count:orderCounts });
+  } catch (error) {
+    console.error("Error fetching order counts:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
 module.exports = router;

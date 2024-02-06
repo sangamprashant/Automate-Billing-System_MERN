@@ -3,16 +3,17 @@ import { Button, Spin, Table, message } from "antd";
 import axios from "axios";
 import { AppContext } from "../../../AppContext";
 import { VisibilityIcon } from "../../../assets/icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 
 function OrdersList({ orderType, orderStatus }) {
   const { token } = React.useContext(AppContext);
   const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
-  const navigate = useNavigate();
 
   React.useEffect(() => {
-    fetchData();
+    if (token) {
+      fetchData();
+    }
   }, [orderType, orderStatus, token]);
 
   const fetchData = async () => {

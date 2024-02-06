@@ -2,6 +2,8 @@ import React from "react";
 
 import { VisibilityIcon } from "../../../assets/icons";
 import { Tooltip } from "antd";
+import { Link } from "react-router-dom";
+import { UserImage } from "../../../assets/image";
 
 function AllOperators({ tableData }) {
   return (
@@ -11,6 +13,7 @@ function AllOperators({ tableData }) {
         <thead>
           <tr>
             <th>Sr.no</th>
+            <th>Profile Photo</th>
             <th>Name</th>
             <th>Email</th>
             <th>Action</th>
@@ -20,13 +23,22 @@ function AllOperators({ tableData }) {
           {tableData.map((data, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
+              <td>
+                <img
+                  src={data.image || UserImage}
+                  alt="profile image"
+                  height={50}
+                  width={50}
+                  className="object-fit-contain"
+                />
+              </td>
               <td>{data.name}</td>
               <td>{data.email}</td>
-              <td className="d-flex gap-2">
+              <td >
                 <Tooltip title={`View ${data.name}'s profile.`}>
-                  <button className="btn btn-primary mr-2">
+                  <Link className="btn btn-primary mr-2" to={`/admin/operators/${data._id}`}>
                     <VisibilityIcon />
-                  </button>
+                  </Link>
                 </Tooltip>
               </td>
             </tr>

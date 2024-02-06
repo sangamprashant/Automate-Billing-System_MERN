@@ -1,6 +1,7 @@
 import AdminCategories from "./Admin/Categories/AdminCategories";
 import AdminDashboard from "./Admin/Dashboard/AdminDashboard";
 import AdminOperators from "./Admin/Operators/AdminOperators";
+import OperatorProfile from "./Admin/Operators/OperatorProfile";
 import Orders from "./Admin/Orders/Orders";
 import AdminProduct from "./Admin/Products/AdminProduct";
 import AdminProfile from "./Admin/Profile/AdminProfile";
@@ -24,4 +25,5 @@ export {
   AdminProfile,
   Bill,
   Orders,
+  OperatorProfile,
 };
