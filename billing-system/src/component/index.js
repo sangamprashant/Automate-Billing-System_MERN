@@ -10,6 +10,7 @@ import Register from "./Authentication/Register";
 import Bill from "./Bill/Bill";
 import Home from "./Home/Home";
 import Loading from "./Loading/Loading";
+import Spiner from "./Loading/Spin";
 import Welcome from "./Welcome/Welcome";
 
 export {
@@ -26,4 +27,5 @@ export {
   Bill,
   Orders,
   OperatorProfile,
+  Spiner,
 };

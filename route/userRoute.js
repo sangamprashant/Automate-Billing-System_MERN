@@ -4,6 +4,7 @@ const {
   registerController,
   userDataController,
   operatorsListController,
+  operatorsProfile,
 } = require("../controllers/userCtrl");
 const authMiddleware = require("../middlewares/authMiddleware");
 const router = express.Router();
@@ -19,5 +20,8 @@ router.get("/data", authMiddleware, userDataController);
 
 // OPERATORS LIST ||GET
 router.get("/opertatos/:type", operatorsListController);
+
+// OPERATORS PROFILE by id || GET
+router.get("/operator-profile/:id", operatorsProfile);
 
 module.exports = router;

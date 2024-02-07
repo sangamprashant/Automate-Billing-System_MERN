@@ -1,8 +1,9 @@
-import { Spin, Tooltip, message } from "antd";
+import { Tooltip, message } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { VisibilityIcon } from "../../../assets/icons";
 import { AppContext } from "../../../AppContext";
 import axios from "axios";
+import Spiner from "../../Loading/Spin";
 
 function AdminViewProduct({ tableData }) {
   const { token } = useContext(AppContext);
@@ -44,9 +45,7 @@ function AdminViewProduct({ tableData }) {
     <>
       <h5>Products List</h5>
       {isLoading ? (
-        <Spin tip="Loading.." size="large" className="mt-5">
-          <div className="content" />
-        </Spin>
+        <Spiner />
       ) : (
         <table className="table table-hover">
           <thead>

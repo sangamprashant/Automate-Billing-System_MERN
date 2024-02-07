@@ -5,6 +5,7 @@ const ProductModel = require("../models/product");
 const { EmailBill } = require("../Email/bill");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
+const userModel = require("../models/userModels");
 
 const router = express.Router();
 
@@ -81,6 +82,27 @@ router.post("/cash/create", authMiddleware, async (req, res) => {
       await product.save();
     }
 
+    // Update user profile with order ID
+    const user = await userModel.findById(salesMan);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: `User with ID ${salesMan} not found`,
+      });
+    }
+
+    // Add order ID to user's orders array
+    user.orders.push(savedOrder._id);
+    try {
+      await user.save();
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to update user profile",
+      });
+    }
+
     //function to send Email to user
     EmailBill(newOrder);
 
@@ -145,6 +167,27 @@ router.post("/online/create", authMiddleware, async (req, res) => {
 
     // Save the order to the database
     const savedOrder = await newOrder.save();
+
+    // Update user profile with order ID
+    const user = await userModel.findById(salesMan);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: `User with ID ${salesMan} not found`,
+      });
+    }
+
+    // Add order ID to user's orders array
+    user.orders.push(savedOrder._id);
+    try {
+      await user.save();
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to update user profile",
+      });
+    }
 
     let total = Number(
       (
@@ -263,8 +306,8 @@ router.get("/details/:mode/:status", authMiddleware, async (req, res) => {
   try {
     const { mode, status } = req.params;
     const orders = await Order.find({
-      paymentMode:mode,
-      orderStatus:status
+      paymentMode: mode,
+      orderStatus: status,
     });
 
     res.status(200).json({
@@ -296,10 +339,28 @@ router.get("/orderCounts", async (req, res) => {
       },
     ]);
 
-    res.json({ success: true, count:orderCounts });
+    res.json({ success: true, count: orderCounts });
   } catch (error) {
     console.error("Error fetching order counts:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+// Router to get the order made by operator
+router.post("/operator/order", async (req, res) => {
+  try {
+    const ids = req.body.ids;
+    // Find products based on the provided product IDs
+    const orders = await Order.find({ _id: { $in: ids } });
+    // Filter out products that were not found (empty array)
+    const existingOrders = orders.filter((order) => order);
+    res.status(200).json({
+      success: true,
+      orders: existingOrders,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ success: false, message: "Failed to get products" });
   }
 });
 

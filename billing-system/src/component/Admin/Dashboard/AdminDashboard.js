@@ -2,10 +2,11 @@ import React from "react";
 import SideNav from "../SideNav/SideNav";
 import "./AdminDashboard.css";
 import Clock from "./Clock";
-import { Spin, message } from "antd";
+import { message } from "antd";
 import axios from "axios";
 import { AppContext } from "../../../AppContext";
 import { UserImage } from "../../../assets/image";
+import Spiner from "../../Loading/Spin";
 
 function AdminDashboard() {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -61,27 +62,29 @@ function AdminDashboard() {
             <table className="table w-100 table-borderless">
               <tbody>
                 <tr className="text-capitalize">
-                  <td>name</td>
+                  <td>
+                    <b>name</b>
+                  </td>
                   <td>{userData?.name}</td>
                 </tr>
                 <tr>
-                  <td className="text-capitalize">email</td>
+                  <td className="text-capitalize">
+                    <b>email</b>
+                  </td>
                   <td>{userData?.email}</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div className="col-md-8 p-2">
-            <h1 className="mb-3 text-center">Welcome Admin,</h1>
+            <h1 className="mb-3 text-center">Welcome Admin</h1>
             <div className="row align-items-center mt-5">
               <div className="col-md-6 d-flex justify-content-center">
                 <Clock />
               </div>
               <div className="col-md-6">
                 {isLoading ? (
-                  <Spin tip="Loading.." size="large" className="mt-5">
-                    <div className="content" />
-                  </Spin>
+                  <Spiner />
                 ) : (
                   <table className="table w-100">
                     <tbody>

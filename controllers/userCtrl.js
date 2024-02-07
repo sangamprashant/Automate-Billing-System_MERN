@@ -93,9 +93,30 @@ const operatorsListController = async (req, res) => {
   }
 };
 
+const operatorsProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const operator = await userModel.findById(id)
+
+    res.status(200).json({
+      success: true,
+      message: "Operator found",
+      operator: operator,
+    });
+  } catch (error) {
+    console.log("Failed to fetch the operators:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch the operator",
+    });
+  }
+};
+
 module.exports = {
   loginController,
   registerController,
   userDataController,
   operatorsListController,
+  operatorsProfile,
 };

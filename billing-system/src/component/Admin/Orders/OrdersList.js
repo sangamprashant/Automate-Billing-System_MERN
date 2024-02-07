@@ -1,9 +1,10 @@
 import React from "react";
-import { Button, Spin, Table, message } from "antd";
+import { Table, message } from "antd";
 import axios from "axios";
 import { AppContext } from "../../../AppContext";
 import { VisibilityIcon } from "../../../assets/icons";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import Spiner from "../../Loading/Spin";
 
 function OrdersList({ orderType, orderStatus }) {
   const { token } = React.useContext(AppContext);
@@ -100,11 +101,7 @@ function OrdersList({ orderType, orderStatus }) {
   return (
     <>
       {isLoading ? (
-        <>
-          <Spin tip="Loading.." size="large" className="mt-5">
-            <div className="content" />
-          </Spin>
-        </>
+        <Spiner />
       ) : (
         <Table dataSource={data} columns={columns} style={{ height: "100%" }} />
       )}
