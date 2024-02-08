@@ -1,10 +1,12 @@
 import React from "react";
 import SideNav from "../SideNav/SideNav";
 import { useParams } from "react-router-dom";
-import { message } from "antd";
+import { Tabs, message } from "antd";
 import Spiner from "../../Loading/Spin";
 import axios from "axios";
 import { UserImage } from "../../../assets/image";
+import OrdersList from "../Orders/OrdersList";
+import OperatorOrderMade from "./OperatorOrderMade";
 
 function OperatorProfile() {
   const { id } = useParams();
@@ -60,8 +62,27 @@ function OperatorProfile() {
   };
 
   // Categorize orders into "online cash-success" and "cash-pending"
-  const onlineCashSuccessOrders = orders.filter(order => order.paymentMode === "online" && order.orderStatus === "success");
-  const cashSuccessOrders = orders.filter(order => order.paymentMode === "cash" && order.orderStatus === "success");
+  const onlineSuccessOrders = orders?.filter(order => order.paymentMode === "online" && order.orderStatus === "success");
+  const onlinePendingOrders = orders?.filter(order => order.paymentMode === "online" && order.orderStatus === "pending");
+  const cashSuccessOrders = orders?.filter(order => order.paymentMode === "cash" && order.orderStatus === "success");
+
+  const items = [
+    {
+      key: "1",
+      label: "Cash",
+      children: <OperatorOrderMade data={cashSuccessOrders} />,
+    },
+    {
+      key: "2",
+      label: "Online",
+      children: <OperatorOrderMade data={onlineSuccessOrders} />,
+    },
+    {
+      key: "3",
+      label: "Pending",
+      children: <OperatorOrderMade data={onlinePendingOrders} />,
+    },
+  ];
 
   return (
     <SideNav>
@@ -102,8 +123,8 @@ function OperatorProfile() {
                   </div>
                   <hr />
                   {/* render the orders */}
-                  orders
-        <p>{JSON.stringify(orders)}</p>
+                  <h5>Orders Made:</h5>
+                  <Tabs centered defaultActiveKey="1" items={items} />
                 </div>
               </React.Fragment>
             ) : (
