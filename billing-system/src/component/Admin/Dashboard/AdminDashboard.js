@@ -7,6 +7,7 @@ import axios from "axios";
 import { AppContext } from "../../../AppContext";
 import { UserImage } from "../../../assets/image";
 import Spiner from "../../Loading/Spin";
+import { Link } from "react-router-dom";
 
 function AdminDashboard() {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -52,8 +53,8 @@ function AdminDashboard() {
           <div className="col-md-4">
             <div className="d-flex justify-content-center ">
               <img
-                width={300}
-                height={300}
+                width={200}
+                height={200}
                 className="object-fit-cover"
                 src={userData?.image ? userData.image : UserImage}
               />
@@ -86,22 +87,21 @@ function AdminDashboard() {
                 {isLoading ? (
                   <Spiner />
                 ) : (
-                  <table className="table w-100">
-                    <tbody>
-                      {orderCount.map((data, index) => (
-                        <tr key={index}>
-                          <td>
-                            <li>
-                              <b className=" text-capitalize">
-                                {data._id.paymentMode} {data._id.orderStatus}
-                              </b>
-                            </li>
-                          </td>
-                          <td>{data.count}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <>
+                    {orderCount.map((data, index) => (
+                      <Link
+                        key={index}
+                        className="btn  w-100 d-flex justify-content-between"
+                      >
+                        <p>
+                          <b className="text-capitalize">
+                            {data._id.paymentMode} {data._id.orderStatus}
+                          </b>
+                        </p>
+                        <p>{data.count}</p>
+                      </Link>
+                    ))}
+                  </>
                 )}
               </div>
             </div>
