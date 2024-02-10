@@ -1,5 +1,5 @@
 const userModel = require("../models/userModels");
-// const bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 // const doctorModel = require("../models/doctorModel");
 // const appointmentModel = require("../models/appointmentModel");
@@ -7,8 +7,19 @@ const jwt = require("jsonwebtoken");
 //register callback
 const registerController = async (req, res) => {
   try {
-    const { faceId } = req.body;
-    const newUser = new userModel({ faceId });
+    const { faceId, name, email, image } = req.body;
+    const user = await userModel.findOne({ email: email });
+    if (user) {
+      return res
+        .status(400)
+        .send({ message: "User already registered", success: false });
+    }
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(faceId, saltRounds);
+    const newUser = new userModel({
+      ...req.body,
+      faceId: hashedPassword,
+    });
     await newUser.save();
     console.log(newUser);
     res.status(200).send({ message: "Register Sucessfully", success: true });
@@ -96,8 +107,8 @@ const operatorsListController = async (req, res) => {
 const operatorsProfile = async (req, res) => {
   try {
     const { id } = req.params;
-    
-    const operator = await userModel.findById(id)
+
+    const operator = await userModel.findById(id);
 
     res.status(200).json({
       success: true,
