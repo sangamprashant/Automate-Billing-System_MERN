@@ -5,9 +5,13 @@ const {
   userDataController,
   operatorsListController,
   operatorsProfile,
+  emailCheck,
 } = require("../controllers/userCtrl");
 const authMiddleware = require("../middlewares/authMiddleware");
 const router = express.Router();
+
+//EMAIL || POST
+router.post("/email", emailCheck);
 
 //LOGIN || POST
 router.post("/login", loginController);

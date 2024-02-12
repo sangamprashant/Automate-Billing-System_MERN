@@ -35,7 +35,7 @@ function AdminOperators() {
       case "all":
         return <AllOperators tableData={tableData} />;
       case "add":
-        return <AddOperator />;
+        return <AddOperator setFrame={setFrame}/>;
       default:
         return <AllOperators tableData={tableData} />;
     }

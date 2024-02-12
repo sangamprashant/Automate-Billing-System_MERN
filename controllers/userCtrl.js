@@ -5,9 +5,31 @@ const jwt = require("jsonwebtoken");
 // const appointmentModel = require("../models/appointmentModel");
 // const moment = require("moment");
 //register callback
+
+const emailCheck = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await userModel.findOne({ email: email });
+    if (user) {
+      return res
+        .status(400)
+        .send({ message: "User already registered", success: false });
+    }
+    res.status(200).send({
+      message: "No email found, proseed with registration",
+      success: true,
+    });
+  } catch (error) {
+    console.log("Failed to fech user data", error);
+    res
+      .status(500)
+      .send({ message: "Failed to fech user data", success: false });
+  }
+};
+
 const registerController = async (req, res) => {
   try {
-    const { faceId, name, email, image } = req.body;
+    const { faceId, email } = req.body;
     const user = await userModel.findOne({ email: email });
     if (user) {
       return res
@@ -35,18 +57,19 @@ const registerController = async (req, res) => {
 // login callback
 const loginController = async (req, res) => {
   try {
-    const user = await userModel.findOne({ faceId: req.body.faceId });
+    const user = await userModel.findOne({ email: req.body.email });
     if (!user) {
       return res
         .status(200)
         .send({ message: "user not found", success: false });
     }
-    //     const isMatch = await bcrypt.compare(req.body.password, user.password);
-    //     if (!isMatch) {
-    //       return res
-    //         .status(200)
-    //         .send({ message: "Invlid EMail or Password", success: false });
-    //     }
+    console.log(req.body)
+    const isMatch = await bcrypt.compare(req.body.faceId, user.faceId);
+    if (!isMatch) {
+      return res
+        .status(200)
+        .send({ message: "Invlid EMail or Password", success: false });
+    }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
@@ -130,4 +153,5 @@ module.exports = {
   userDataController,
   operatorsListController,
   operatorsProfile,
+  emailCheck,
 };

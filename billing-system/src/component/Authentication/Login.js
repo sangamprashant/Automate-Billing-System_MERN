@@ -44,7 +44,7 @@ function Login() {
         locale: "auto",
       });
       if (response) {
-        handelDbLogin(response?.facialId);
+        handelDbLogin(response?.facialId, response?.payload?.email);
       }
     } catch (error) {
       message.error(handleError(error));
@@ -52,12 +52,13 @@ function Login() {
     }
   };
 
-  const handelDbLogin = async (facialId) => {
+  const handelDbLogin = async (facialId, email) => {
     try {
       const loginResponse = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/api/user/login`,
         {
           faceId: facialId,
+          email: email,
         }
       );
       console.log(loginResponse.data);

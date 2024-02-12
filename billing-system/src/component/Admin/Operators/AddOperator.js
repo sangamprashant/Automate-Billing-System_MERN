@@ -10,50 +10,54 @@ import {
   PhotoCameraFrontIcon,
 } from "../../../assets/icons";
 import "./Operators.css";
+import { storage } from "../../../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import faceIO from "@faceio/fiojs";
 import { handleError } from "../../Authentication/errorByFACEID";
+import axios from "axios";
 
 const fio = new faceIO(process.env.REACT_APP_PUBLIC_ID);
 
-function AddOperator() {
-  const [imagePreview, setImagePreview] = useState(null);
-  const [isCameraOpen, setCameraOpen] = useState(false);
-  const [initialCapturePreview, setInitialCapturePreview] = useState(false);
-  const [isFaceEnrolled, setIsFaceEnrolled] = useState(false);
+function AddOperator({setFrame}) {
+  const [imagePreview, setImagePreview] = React.useState(null);
+  const [selectImage, setSelectedImage] = React.useState(null);
+  const [isCameraOpen, setCameraOpen] = React.useState(false);
+  const [initialCapturePreview, setInitialCapturePreview] =
+    React.useState(false);
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const webcamRef = useRef(null);
+  const [image, setImage] = React.useState("");
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const [foundEmail,setFoundEmail] = React.useState(true)
+
+  const webcamRef = React.useRef(null);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-
     if (file && file.type.startsWith("image/")) {
+      setSelectedImage(file);
       const reader = new FileReader();
-
       reader.onloadend = () => {
         setImagePreview(reader.result);
       };
-
       reader.readAsDataURL(file);
     }
   };
 
-  const captureImageFromWebcam = () => {
+  const captureImageFromWebcam = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
+    const blob = await fetch(imageSrc).then((res) => res.blob());
+    setSelectedImage(blob);
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-
     const img = new Image();
     img.src = imageSrc;
-
-    img.onload = () => {
+    img.onload = async () => {
       const minSize = Math.min(img.width, img.height);
       const offsetX = (img.width - minSize) / 2;
       const offsetY = (img.height - minSize) / 2;
-
       canvas.width = minSize;
       canvas.height = minSize;
-
       ctx.drawImage(
         img,
         offsetX,
@@ -65,80 +69,92 @@ function AddOperator() {
         minSize,
         minSize
       );
-
       const croppedImageSrc = canvas.toDataURL("image/jpeg");
       setImagePreview(croppedImageSrc);
       setInitialCapturePreview(true);
     };
   };
-  const handleEnrollFace = async () => {
-    if (isFaceEnrolled) {
-      return message.warning("Face is already enrolled");
-    }
-    if (!email.trim() || !name.trim() || !imagePreview) {
-      return message.warning("All fielde are required");
-    }
 
-    try {
-      const response = await fio.enroll({
-        payload: {
-          email,
-        },
-      });
-      message.success("face id created");
-      console.log("REsponse from faceAPI", response);
-    } catch (error) {
-      console.log(error)
-      message.error(handleError(error));
+  React.useEffect(() => {
+      checkEmail();
+  }, [email]);
+  const checkEmail = async () => {
+    setFoundEmail(true)
+    if(!isEmailValid){
+      return 
     }
-// details
-// : 
-// {gender: 'female', age: 27}
-// facialId
-// : 
-// "d2169c279d3c48969950c8217f2a17e8fioacbc3"
-// timestamp
-// : 
-// "2024-02-10T08:49:05"
-// [[Prototype]]
-// : 
-// Object
-    setIsFaceEnrolled(true);
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/api/user/email`,
+        {
+          email,
+        }
+      );
+      if (response.data.success) {
+        message.success(response.data.message || "proceed");
+        setFoundEmail(false)
+      } else {
+        message.warning(response.data.message || "proceed");
+      }
+    } catch (error) {
+      message.error(error.response.data.message || "Something went wrong.");
+    }
   };
 
-  const handleEnroll = async () => {
-    setIsEnrolling(true);
+  const handelRegister = async () => {
+    if (!email.trim() || !name.trim() || !selectImage) {
+      return message.warning("All fielde are required");
+    }
+    if(foundEmail){
+      return message.warning("Email already used.")
+    }
+    const fileRef = ref(
+      storage,
+      `automate-billing-system/operator/${Date.now() + selectImage.name}`
+    );
+    uploadBytes(fileRef, selectImage).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        handleEnrollFace(url)
+      });
+    });
+  };
 
+  const handleEnrollFace = async (url) => {
     try {
       const response = await fio.enroll({
         payload: {
-          email,
+          email:email.trim(),
         },
       });
-      message.success("face id created");
-      console.log("REsponse from faceAPI", response);
-      const dbBody = {
-        faceId: response.facialId,
-      };
+      handleSaveToDb(response?.facialId,url)
+    } catch (error) {
+      console.log(error);
+      message.error(handleError(error));
+    }
+  };
 
-      // Send enrollment data to backend for storage
+  const handleSaveToDb = async (fId,url) => {
+    try {
+      const dbBody = {
+        faceId: fId,
+        name:name,
+        email:email,
+        image:url
+      };
+      console.log(url)
       const dbREsponse = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/api/user/register`,
         dbBody
       );
-
       if (dbREsponse.status === 200) {
         console.log("Registered successfully");
+        message.success(dbREsponse.data.message || "Operator created")
+        setFrame("add")
       }
-
-      // Handle successful enrollment on the frontend
       console.log("Enrollment successful!");
-      setIsEnrolling(false);
-      // Redirect to another page or display a success message
     } catch (error) {
-      handleError(fio, error);
-      setError(error);
-      setIsEnrolling(false);
+      console.log("Failed to save the operator:",error)
+      message.error(error.response.data.message||"Something went wrong")
     }
   };
 
@@ -156,7 +172,7 @@ function AddOperator() {
                   id="operatorName"
                   name="name"
                   placeholder="Name"
-                  className="form-control"
+                  className={`form-control border-3 border-${name.trim()?"success":"danger"}`}
                   value={name}
                   onChange={(e) => {
                     setName(e.target.value);
@@ -174,7 +190,7 @@ function AddOperator() {
                   id="operatorEmail"
                   name="email"
                   placeholder="Email"
-                  className="form-control"
+                  className={`form-control border-3 border-${(!foundEmail)?"success":isEmailValid && foundEmail?"warning":"danger"}`}
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -234,11 +250,12 @@ function AddOperator() {
           <Tooltip title="Please enroll a face for authentication.">
             <button
               type="button"
-              className={`btn btn-${isFaceEnrolled ? "success" : "danger"}`}
-              onClick={handleEnrollFace}
+              className={`btn btn-${(!foundEmail && name.trim() && selectImage ) ? "success" : "danger"}`}
+              onClick={handelRegister}
+              disabled={(foundEmail || !name.trim() || !selectImage )}
             >
               <FaceRetouchingNaturalIcon />{" "}
-              {isFaceEnrolled ? "A face is enrolled" : "Click to enroll "}
+              {(!foundEmail && name.trim() && selectImage ) ? "Click to enroll " : "All fields are required"}
             </button>
           </Tooltip>
         </div>
