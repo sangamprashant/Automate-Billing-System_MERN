@@ -16,7 +16,7 @@ function Topbar({ user, isSidebarOpen, setIsSidebarOpen }) {
         <Button onClick={toggleSidebar} className=" text-dark">
           {isSidebarOpen ? <CloseIcon /> : <MenuIcon />}
         </Button>
-        <Link className="text-black" to="/admin/profile">
+        <Link className="text-black text-decoration-none" to="/admin/profile">
           {user?.name}
           <AccountCircleIcon style={{ marginLeft: "10px" }} />
         </Link>

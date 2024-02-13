@@ -63,7 +63,6 @@ const loginController = async (req, res) => {
         .status(200)
         .send({ message: "user not found", success: false });
     }
-    console.log(req.body)
     const isMatch = await bcrypt.compare(req.body.faceId, user.faceId);
     if (!isMatch) {
       return res
@@ -147,6 +146,30 @@ const operatorsProfile = async (req, res) => {
   }
 };
 
+const userProfileUpdate = async (req, res) => {
+  try {
+    const { _id, ...updateData } = req.body;
+    const user = await userModel.findByIdAndUpdate(_id, updateData);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: user,
+    });
+  } catch (error) {
+    console.error("Failed to update the profile:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update the profile",
+      error: error.message, // Send back the error message for debugging
+    });
+  }
+};
+
 module.exports = {
   loginController,
   registerController,
@@ -154,4 +177,5 @@ module.exports = {
   operatorsListController,
   operatorsProfile,
   emailCheck,
+  userProfileUpdate,
 };

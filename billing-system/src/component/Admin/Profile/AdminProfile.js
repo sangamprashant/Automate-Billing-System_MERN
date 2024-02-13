@@ -29,7 +29,7 @@ function AdminProfile() {
       case "all":
         return <>{userData ? <ProfileOrdersAll operator={userData} isAdmin={true}/> : <Spiner />}</>;
       case "add":
-        return <EditProfile />;
+        return <EditProfile operator={userData} setUserData={setUserData}/>;
       default:
         return <>{userData ? <ProfileOrdersAll operator={userData} isAdmin={true}/> : <Spiner />}</>;
     }
@@ -39,7 +39,7 @@ function AdminProfile() {
     <SideNav>
       <div className="admin-operators">
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h1 className="dashboard-title">{userData.name}'s Profile</h1>
+          <h1 className="dashboard-title">{userData?.name}'s Profile</h1>
           <div className="d-flex gap-3">
             <Tooltip title="View Your Profile">
               <button

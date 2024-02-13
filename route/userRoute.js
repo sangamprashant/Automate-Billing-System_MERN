@@ -6,6 +6,7 @@ const {
   operatorsListController,
   operatorsProfile,
   emailCheck,
+  userProfileUpdate,
 } = require("../controllers/userCtrl");
 const authMiddleware = require("../middlewares/authMiddleware");
 const router = express.Router();
@@ -27,5 +28,8 @@ router.get("/opertatos/:type", operatorsListController);
 
 // OPERATORS PROFILE by id || GET
 router.get("/operator-profile/:id", operatorsProfile);
+
+//USERPROFILEUPDATE || POST
+router.post("/update", userProfileUpdate)
 
 module.exports = router;
