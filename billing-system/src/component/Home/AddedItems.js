@@ -91,55 +91,11 @@ function AddedItems({
     <div className="home-main item-section">
       {/* North Section */}
       <div className="north-section py-3 d-flex  px-3 gap-4 flex-column bg-ui">
-        {/* product search */}
         <table>
           <tbody>
             <tr className="d-flex  align-items-end gap-2">
               <td className="">
-                <strong className=" text-nowrap text-primary">
-                  Search By Product:
-                </strong>
-                <input
-                  className="form-control bg-warning-subtle"
-                  placeholder="Search"
-                  disabled={goToPayment}
-                />
-              </td>
-              <td>
-                <strong className=" text-nowrap text-primary">Barcode:</strong>
-                <input
-                  className="form-control bg-warning-subtle "
-                  placeholder="Barcode"
-                  disabled={goToPayment}
-                />
-              </td>
-              <td>
-                <strong className=" text-nowrap text-primary">Qty:</strong>
-                <input
-                  className="form-control bg-warning-subtle"
-                  placeholder="QTY"
-                  disabled={goToPayment}
-                />
-              </td>
-              <td className="d-flex  align-items-center">
-                <button className="btn btn-primary" disabled={goToPayment}>
-                  <SearchIcon />
-                </button>
-                {/* <button className="btn btn-primary" disabled={goToPayment}><AddIcon/></button> */}
-              </td>
-              <td className="d-flex  align-items-center">
-                <button className="btn btn-primary" disabled={goToPayment} onClick={()=>setIsScannerOpen(true)}>
-                  <QrCodeScannerIcon />
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <table>
-          <tbody>
-            <tr className="d-flex  align-items-end gap-2">
-              <td className="">
-                <label className=" text-nowrap">Disc%PU:</label>
+                <strong className=" text-nowrap text-primary">Disc%PU:</strong>
                 <input
                   className="form-control bg-warning-subtle"
                   type="number"
@@ -150,7 +106,7 @@ function AddedItems({
                 />
               </td>
               <td>
-                <label className=" text-nowrap">Dics Amt PU:</label>
+                <strong className=" text-nowrap text-primary">Dics Amt PU:</strong>
                 <input
                   className="form-control bg-warning-subtle "
                   type="number"
@@ -160,9 +116,8 @@ function AddedItems({
                   onChange={handleDiscountAmountChange}
                 />
               </td>
-
               <td>
-                <label className=" text-nowrap">Overall Disc Amt:</label>
+                <strong className=" text-nowrap text-primary">Overall Disc Amt:</strong>
                 <input
                   className="form-control bg-warning-subtle"
                   placeholder="0.00"
@@ -173,7 +128,7 @@ function AddedItems({
                 />
               </td>
               <td>
-                <label className=" text-nowrap">Total Disc Amount:</label>
+                <strong className=" text-nowrap text-primary">Total Disc Amount:</strong>
                 <input
                   className="form-control bg-warning-subtle "
                   placeholder="0.00"
@@ -202,6 +157,11 @@ function AddedItems({
                 <RedoIcon />
               </button>
             </Tooltip> */}
+            <Tooltip title="Scan a product">
+                <button className="btn btn-primary" disabled={goToPayment} onClick={()=>setIsScannerOpen(true)}>
+                  <QrCodeScannerIcon />
+                </button>
+              </Tooltip>
           </Space>
         </div>
       </div>

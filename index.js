@@ -22,7 +22,7 @@ app.use("/api/order", orderRoute);
 app.use("/api/product", productRoute);
 app.use("/api/user", userRoute);
 
-app.use(require("./try"));
+// app.use(require("./try"));
 
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
@@ -50,9 +50,6 @@ mongoose.connection.on("error", (err) => {
 //     }
 //   );
 // });
-app.get("/", (req, res) => {
-  res.send("Hello");
-});
 
 // Start the server
 app.listen(port, () => {

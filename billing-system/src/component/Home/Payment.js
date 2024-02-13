@@ -105,7 +105,7 @@ function Payment({
     "asdfghjkl",
     "zxcvbnm.",
     "@",
-    "CD",
+    "CD ",
   ];
 
   const keyboardButtons = Array.from(qwertyKeyboard.join(""));
@@ -254,8 +254,11 @@ function Payment({
                         : button === "@" || button === "."
                         ? "success"
                         : "primary"
-                    } mr-2 mb-2 p-2`}
-                    style={{ width: "calc(8% - 8px)" }}
+                    } mr-2 p-2`}
+                    style={{
+                      width:
+                        button === " " ? "cal(100% - 16px)" : "calc(8% - 8px)",
+                    }}
                     onClick={() => handleButtonClick(button)}
                     disabled={
                       activeField === "mobile" &&
@@ -265,7 +268,7 @@ function Payment({
                         qwertyKeyboard[4].includes(button))
                     }
                   >
-                    <b>{button}</b>
+                    <b>{button === " " ? "Space-bar" : button}</b>
                   </button>
                 ))}
               </div>

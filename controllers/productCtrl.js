@@ -19,7 +19,11 @@ const CreateProductController = async (req, res) => {
         message: "Only admin users are allowed to create products",
       });
     }
-    const maxProductId = await ProductModel.findOne({}, {}, { sort: { 'p_id': -1 } });
+    const maxProductId = await ProductModel.findOne(
+      {},
+      {},
+      { sort: { p_id: -1 } }
+    );
     const newProduct = new ProductModel({
       p_id: maxProductId ? maxProductId.p_id + 1 : 1,
       p_name,
@@ -78,13 +82,38 @@ const GetProductsByCategoryController = async (req, res) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch products by category',
+      message: "Failed to fetch products by category",
     });
   }
 };
 
+const GetProductsByScanner = async (req, res) => {
+  console.log(req.body)
+  try {
+    const product = await ProductModel.findOne({ p_id: req.body.id });
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    console.log("Failed to fetch the product:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch the product",
+    });
+  }
+};
+
+
 module.exports = {
   CreateProductController,
   GetAllProductsController,
-  GetProductsByCategoryController
+  GetProductsByCategoryController,
+  GetProductsByScanner,
 };

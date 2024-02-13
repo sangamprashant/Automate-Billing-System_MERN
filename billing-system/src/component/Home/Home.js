@@ -33,6 +33,7 @@ function Home() {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [selectedProductsHistory, setSelectedProductsHistory] = useState([]);
   const [currentHistoryIndex, setCurrentHistoryIndex] = useState(0);
+  const [scrollIndex, setScrollIndex] = useState(0);
   // Added Items
   const [discountPercentagePerUnit, setDiscountPercentagePerUnit] = useState(0.0);
   const [discountAmountPerUnit, setDiscountAmountPerUnit] = useState(0.0);
@@ -247,18 +248,23 @@ function Home() {
             categories={categories}
             categorySelected={categorySelected}
             setCategorySelected={setCategorySelected}
+            setScrollIndex={setScrollIndex}
           />
           <ProductSection
             productByCategory={productByCategory}
             categorySelected={categorySelected}
             selectedProducts={selectedProducts}
             setSelectedProducts={setSelectedProducts}
+            scrollIndex={scrollIndex}
+            setScrollIndex={setScrollIndex}
           />
           {isScannerOpen&&<Scanner 
             setIsScannerOpen={setIsScannerOpen}
             isScannerOpen={isScannerOpen}
             scanResult={scanResult} 
             setScanResult={setScanResult}
+            selectedProducts={selectedProducts}
+            setSelectedProducts={setSelectedProducts}
           />}
         </>
       ) : (

@@ -2,9 +2,40 @@ import { Button } from "antd";
 import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
 import React, { useState } from "react";
-import { ProductCategory } from "../Admin/Products/rawData";
 
-function ButtonSection({ categories, categorySelected, setCategorySelected }) {
+function ButtonSection({
+  categories,
+  categorySelected,
+  setCategorySelected,
+  setScrollIndex,
+}) {
+  const [scrollIndex, setScrollIndexButton] = useState(0);
+
+  const handleScroll = (index) => {
+    const targetElement = document.getElementById(`scroll-button-${index}`);
+    setScrollIndexButton(index);
+    if (targetElement) {
+      try {
+        targetElement.scrollIntoView({ behavior: "smooth" });
+        console.log(`Scrolling to product item ${index} initiated.`);
+      } catch (error) {
+        console.error("Scrolling failed:", error);
+      }
+    } else {
+      let temp = 0;
+      if (index <= 0) {
+        temp = 0;
+        setScrollIndexButton(0);
+      } else {
+        temp = categories.length - 1;
+        setScrollIndexButton(categories.length - 1);
+      }
+      document
+        .getElementById(`scroll-button-${temp}`)
+        .scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="home-main button-section p-2 bg-ui">
       {/* North Section */}
@@ -15,6 +46,7 @@ function ButtonSection({ categories, categorySelected, setCategorySelected }) {
           size="large"
           className="w-100"
           type="primary"
+          onClick={() => handleScroll(scrollIndex - 5)}
         />
       </div>
 
@@ -23,10 +55,14 @@ function ButtonSection({ categories, categorySelected, setCategorySelected }) {
         {categories?.map((data, index) => (
           <button
             key={index}
+            id={`scroll-button-${index}`}
             className={`w-100 mb-4 p-3 btn btn-${
               categorySelected === data.category ? "primary" : "secondary"
             }`}
-            onClick={() => setCategorySelected(data.category)}
+            onClick={() => {
+              setCategorySelected(data.category);
+              setScrollIndex(0);
+            }}
           >
             {data.category}
           </button>
@@ -41,6 +77,7 @@ function ButtonSection({ categories, categorySelected, setCategorySelected }) {
           size="large"
           className="w-100"
           type="primary"
+          onClick={() => handleScroll(scrollIndex + 5)}
         />
       </div>
     </div>

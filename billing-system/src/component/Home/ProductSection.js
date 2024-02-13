@@ -15,9 +15,15 @@ function ProductSection({
   categorySelected,
   selectedProducts,
   setSelectedProducts,
+  scrollIndex,
+  setScrollIndex
 }) {
   const { setToken, isLogged, setIsLogged, goToPayment, setGoToPayment } =
     useContext(AppContext);
+
+  React.useEffect(() => {
+    setScrollIndex(0);
+  }, [categorySelected,productByCategory]);
 
   const handleGoToPayment = () => {
     console.log("Pay button is clicked");
@@ -33,6 +39,7 @@ function ProductSection({
 
   const handleScroll = (index) => {
     const targetElement = document.getElementById(`product-item-${index}`);
+    setScrollIndex(index);
     if (targetElement) {
       try {
         targetElement.scrollIntoView({ behavior: "smooth" });
@@ -41,7 +48,17 @@ function ProductSection({
         console.error("Scrolling failed:", error);
       }
     } else {
-      console.log(`Product item with index ${index} not found`);
+      let temp = 0;
+      if (index <= 0) {
+        temp = 0;
+        setScrollIndex(0);
+      } else {
+        temp = productByCategory.length - 1;
+        setScrollIndex(productByCategory.length - 1);
+      }
+      document
+        .getElementById(`product-item-${temp}`)
+        .scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -86,7 +103,7 @@ function ProductSection({
             size="large"
             type="primary"
             id="scrollTop"
-            onClick={() => handleScroll(0)}
+            onClick={() => handleScroll(scrollIndex - 10)}
           />
           <h2>{categorySelected}</h2>
         </div>
@@ -143,7 +160,7 @@ function ProductSection({
           icon={<SouthIcon />}
           size="large"
           type="primary"
-          onClick={() => handleScroll(productByCategory.length - 1)}
+          onClick={() => handleScroll(scrollIndex + 10)}
         />
         <Tooltip title="Payment" onClick={handleGoToPayment}>
           <button
