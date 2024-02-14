@@ -31,7 +31,7 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 
 mongoose.connection.on("connected", () => {
-  console.log(`Connected to MongoDB database: ${process.env.MONGO_DATABASE}`);
+  console.log(`Connected to MongoDB`);
 });
 
 mongoose.connection.on("error", (err) => {
@@ -39,17 +39,17 @@ mongoose.connection.on("error", (err) => {
 });
 
 // Serve the frontend
-// app.use(express.static(path.join(__dirname, "client/build")));
-// app.get("*", (req, res) => {
-//   res.sendFile(
-//     path.join(__dirname, "client/build/index.html"),
-//     function (err) {
-//       if (err) {
-//         res.status(500).send(err);
-//       }
-//     }
-//   );
-// });
+app.use(express.static(path.join(__dirname, "billing-system/build")));
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "billing-system/build/index.html"),
+    function (err) {
+      if (err) {
+        res.status(500).send(err);
+      }
+    }
+  );
+});
 
 // Start the server
 app.listen(port, () => {

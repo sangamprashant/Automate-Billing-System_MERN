@@ -51,15 +51,12 @@ function App() {
     const fetchData = async () => {
       if (token && isLogged) {
         const data = await fetchUserData(token);
-        console.log("data got:", data);
         setUserData(data);
       }
     };
 
     fetchData();
   }, [token, isLogged]);
-
-  console.log("user data:", userData);
 
   return (
     <AppContext.Provider

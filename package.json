@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,5 +20,8 @@
     "nodemailer": "^6.9.8",
     "nodemon": "^3.0.3",
     "razorpay": "^2.9.2"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
