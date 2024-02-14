@@ -183,7 +183,7 @@ function Home() {
         amount: amount.toString(),
         currency: currency,
         name: customerName,
-        image: "http://localhost:3000/logo.png",
+        image: "https://raw.githubusercontent.com/sangamprashant/Automate-Billing-System_MERN/main/billing-system/public/icon.png",
         order_id: order_id,
         handler: async function (response) {
           const data = {
