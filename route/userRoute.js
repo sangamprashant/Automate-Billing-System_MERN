@@ -1,7 +1,6 @@
 const express = require("express");
 const {
   loginController,
-  registerController,
   userDataController,
   operatorsListController,
   operatorsProfile,
@@ -16,9 +15,6 @@ router.post("/email", emailCheck);
 
 //LOGIN || POST
 router.post("/login", loginController);
-
-//REGISTER || POST
-router.post("/register", registerController);
 
 //USER DATA || GET
 router.get("/data", authMiddleware, userDataController);

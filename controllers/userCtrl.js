@@ -27,33 +27,6 @@ const emailCheck = async (req, res) => {
   }
 };
 
-const registerController = async (req, res) => {
-  try {
-    const { faceId, email } = req.body;
-    const user = await userModel.findOne({ email: email });
-    if (user) {
-      return res
-        .status(400)
-        .send({ message: "User already registered", success: false });
-    }
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(faceId, saltRounds);
-    const newUser = new userModel({
-      ...req.body,
-      faceId: hashedPassword,
-    });
-    await newUser.save();
-    console.log(newUser);
-    res.status(200).send({ message: "Register Sucessfully", success: true });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: `Register Controller ${error.message}`,
-    });
-  }
-};
-
 // login callback
 const loginController = async (req, res) => {
   try {
@@ -172,7 +145,6 @@ const userProfileUpdate = async (req, res) => {
 
 module.exports = {
   loginController,
-  registerController,
   userDataController,
   operatorsListController,
   operatorsProfile,

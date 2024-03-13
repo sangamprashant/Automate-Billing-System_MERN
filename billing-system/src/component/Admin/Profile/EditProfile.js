@@ -11,8 +11,6 @@ import {
 } from "../../../assets/icons";
 import { storage } from "../../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import faceIO from "@faceio/fiojs";
-import { handleError } from "../../Authentication/errorByFACEID";
 import axios from "axios";
 
 function EditProfile({ operator,setUserData }) {

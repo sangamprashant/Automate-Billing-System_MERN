@@ -13,10 +13,6 @@ const userSchema = new mongoose.Schema(
     image: {
       type: String,
     },
-    faceId: {
-      type: String,
-      required: [true, "face id is require"],
-    },
     isAdmin: {
       type: Boolean,
       default: false,

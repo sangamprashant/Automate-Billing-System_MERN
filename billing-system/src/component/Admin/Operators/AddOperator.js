@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import { UserImage } from "../../../assets/image";
 import Webcam from "react-webcam";
 import { Tooltip, message } from "antd";
@@ -10,13 +10,7 @@ import {
   PhotoCameraFrontIcon,
 } from "../../../assets/icons";
 import "./Operators.css";
-import { storage } from "../../../firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import faceIO from "@faceio/fiojs";
-import { handleError } from "../../Authentication/errorByFACEID";
 import axios from "axios";
-
-const fio = new faceIO(process.env.REACT_APP_PUBLIC_ID);
 
 function AddOperator({setFrame}) {
   const [imagePreview, setImagePreview] = React.useState(null);
@@ -26,6 +20,8 @@ function AddOperator({setFrame}) {
     React.useState(false);
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
   const [image, setImage] = React.useState("");
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const [foundEmail,setFoundEmail] = React.useState(true)
@@ -102,60 +98,42 @@ function AddOperator({setFrame}) {
   };
 
   const handelRegister = async () => {
-    if (!email.trim() || !name.trim() || !selectImage) {
+    if (!email.trim() || !name.trim() || !selectImage || !password.trim()) {
       return message.warning("All fielde are required");
     }
     if(foundEmail){
       return message.warning("Email already used.")
     }
-    const fileRef = ref(
-      storage,
-      `automate-billing-system/operator/${Date.now() + selectImage.name}`
-    );
-    uploadBytes(fileRef, selectImage).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        handleEnrollFace(url)
-      });
-    });
-  };
 
-  const handleEnrollFace = async (url) => {
     try {
-      const response = await fio.enroll({
-        payload: {
-          email:email.trim(),
-        },
-      });
-      handleSaveToDb(response?.facialId,url)
-    } catch (error) {
-      console.log(error);
-      message.error(handleError(error));
-    }
-  };
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("name", name);
+      formData.append("password", password);
+      formData.append("face_photo", selectImage);
 
-  const handleSaveToDb = async (fId,url) => {
-    try {
-      const dbBody = {
-        faceId: fId,
-        name:name,
-        email:email,
-        image:url
-      };
-      console.log(url)
-      const dbREsponse = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/api/user/register`,
-        dbBody
-      );
-      if (dbREsponse.status === 200) {
-        console.log("Registered successfully");
-        message.success(dbREsponse.data.message || "Operator created")
-        setFrame("add")
+      console.log("form send: ", formData);
+
+      const response = await fetch("http://127.0.0.1:8000/api/register", {
+        method: "POST",
+        body: formData,
+      });
+
+      const responseData = await response.json();
+      console.log("response:", responseData);
+
+      console.log(responseData);
+
+      if (responseData.success) {
+        message.success("Registered successfully");
+      } else {
+        throw new Error(responseData.error || "Something went wrong");
       }
-      console.log("Enrollment successful!");
     } catch (error) {
-      console.log("Failed to save the operator:",error)
-      message.error(error.response.data.message||"Something went wrong")
+      message.error(error.message || "Something went wrong");
+    } finally {
     }
+    
   };
 
   return (
@@ -194,6 +172,24 @@ function AddOperator({setFrame}) {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
+                  }}
+                />
+              </Tooltip>
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="form-group">
+              <label htmlFor="operatorName">Password</label>
+              <Tooltip title="Password for operator">
+                <input
+                  type="password"
+                  id="operatorName"
+                  name="password"
+                  placeholder="Password"
+                  className={`form-control border-3 border-${password.trim()?"success":"danger"}`}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
                   }}
                 />
               </Tooltip>
@@ -252,10 +248,10 @@ function AddOperator({setFrame}) {
               type="button"
               className={`btn btn-${(!foundEmail && name.trim() && selectImage ) ? "success" : "danger"}`}
               onClick={handelRegister}
-              disabled={(foundEmail || !name.trim() || !selectImage )}
+              disabled={(foundEmail || !name.trim() || !selectImage || !password.trim())}
             >
               <FaceRetouchingNaturalIcon />{" "}
-              {(!foundEmail && name.trim() && selectImage ) ? "Click to enroll " : "All fields are required"}
+              {(!foundEmail && name.trim() && selectImage & password.trim() ) ? "Click to enroll " : "All fields are required"}
             </button>
           </Tooltip>
         </div>
