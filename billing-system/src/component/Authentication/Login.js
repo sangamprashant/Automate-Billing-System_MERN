@@ -10,7 +10,7 @@ import Modal from "../Modal";
 
 
 function Login() {
-  const { token, setToken, isLogged, setIsLogged } = useContext(AppContext);
+  const { token, setToken, isLogged, setIsLogged,setIsLoading } = useContext(AppContext);
   //login with credials
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -100,11 +100,12 @@ function Login() {
   const handleRegister = async () => {
     setLoading(true);
     setModelRegister(false);
+    setIsLoading(true)
     try {
       const formData = new FormData();
       formData.append("face_photo", imgeBlob, "screenshot.jpg");
 
-      const response = await fetch("http://127.0.0.1:8000/api/login", {
+      const response = await fetch(`${process.env.REACT_APP_PYTHON_SERVER}/api/login`, {
         method: "POST",
         body: formData,
       });
@@ -125,6 +126,7 @@ function Login() {
       console.error("Failed to register:", error);
       message.error(error.message || "Something went wrong");
     } finally {
+      setIsLoading(false)
       setLoading(false);
       setCapturedImage(null);
       setImageBlob(null);
@@ -168,7 +170,7 @@ function Login() {
           <button
             type="button"
             className="shadow btn btn-primary px-5 mt-4"
-            onClick={startWebcam}
+            onClick={HandleWebCam}
           >
             Login
           </button>

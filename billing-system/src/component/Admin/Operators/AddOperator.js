@@ -11,8 +11,10 @@ import {
 } from "../../../assets/icons";
 import "./Operators.css";
 import axios from "axios";
+import { AppContext } from "../../../AppContext";
 
 function AddOperator({setFrame}) {
+  const {setIsLoading} = React.useContext(AppContext)
   const [imagePreview, setImagePreview] = React.useState(null);
   const [selectImage, setSelectedImage] = React.useState(null);
   const [isCameraOpen, setCameraOpen] = React.useState(false);
@@ -22,7 +24,6 @@ function AddOperator({setFrame}) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const [image, setImage] = React.useState("");
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const [foundEmail,setFoundEmail] = React.useState(true)
 
@@ -105,6 +106,8 @@ function AddOperator({setFrame}) {
       return message.warning("Email already used.")
     }
 
+    setIsLoading(true)
+
     try {
       const formData = new FormData();
       formData.append("email", email);
@@ -112,17 +115,15 @@ function AddOperator({setFrame}) {
       formData.append("password", password);
       formData.append("face_photo", selectImage);
 
-      console.log("form send: ", formData);
+      // console.log("form send: ", formData);
 
-      const response = await fetch("http://127.0.0.1:8000/api/register", {
+      const response = await fetch(`${process.env.REACT_APP_PYTHON_SERVER}/api/register`, {
         method: "POST",
         body: formData,
       });
 
       const responseData = await response.json();
-      console.log("response:", responseData);
-
-      console.log(responseData);
+      // console.log("response:", responseData);
 
       if (responseData.success) {
         message.success("Registered successfully");
@@ -132,6 +133,7 @@ function AddOperator({setFrame}) {
     } catch (error) {
       message.error(error.message || "Something went wrong");
     } finally {
+      setIsLoading(false)
     }
     
   };
