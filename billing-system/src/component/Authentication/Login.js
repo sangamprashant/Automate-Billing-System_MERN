@@ -180,9 +180,9 @@ function Login() {
         <>
           <h2>Webcam Scanner</h2>
           {capturedImage ? (
-            <img src={capturedImage} alt="" />
+            <img src={capturedImage} alt="" width={400} />
           ) : (
-            <video ref={videoRef} autoPlay playsInline id="screenshot-target" />
+            <video ref={videoRef} autoPlay playsInline id="screenshot-target" width={400} />
           )}
           <div className="d-flex justify-content-around mt-2">
             <button

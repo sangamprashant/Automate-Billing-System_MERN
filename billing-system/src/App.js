@@ -84,7 +84,7 @@ function App() {
         </Routes>
       ) : (
         <>
-          {/* <Loading />  */}
+          <Loading /> 
           <Routes>
             <Route path="/" element={<Welcome />} />
             {/* bill */}
