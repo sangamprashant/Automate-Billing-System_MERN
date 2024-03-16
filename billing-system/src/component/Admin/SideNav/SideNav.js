@@ -67,7 +67,7 @@ function SideNav({ children }) {
           isSidebarOpen ? "sidebar-open" : "small"
         }`}
       >
-        <Link className="sidenav-item shadow rounded-3 border-3 inactive d-flex justify-content-start text-dark py-4 align-items-center">
+        <Link className="sidenav-item  rounded-3 border-3  d-flex justify-content-start text-dark py-4 align-items-center">
           <ShoppingCartOutlinedIcon stroke="#8e19c7" size="20px" />
           {isSidebarOpen && (
             <b style={{ color: "#8e19c7", fontSize: "20px" }}>Dashbord</b>

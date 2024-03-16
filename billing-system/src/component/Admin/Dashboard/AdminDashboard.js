@@ -1,11 +1,10 @@
 import React from "react";
 import SideNav from "../SideNav/SideNav";
 import "./AdminDashboard.css";
-import Clock from "./Clock";
 import { message } from "antd";
 import axios from "axios";
 import { AppContext } from "../../../AppContext";
-import { UserImage } from "../../../assets/image";
+import { AdminImage, UserImage } from "../../../assets/image";
 import Spiner from "../../Loading/Spin";
 import { Link } from "react-router-dom";
 
@@ -49,13 +48,15 @@ function AdminDashboard() {
       <div className="admin-dashboard">
         <h1 className="dashboard-title">Dashboard</h1>
         <hr />
+        <h1 className="mb-3 text-center">Welcome Admin</h1>
+
         <div className="dashboard-cards row mt-4">
-          <div className="col-md-4">
+          <div className="col-md-6">
             <div className="d-flex justify-content-center ">
               <img
                 width={200}
                 height={200}
-                className="object-fit-cover"
+                className="object-fit-cover rounded-circle"
                 src={userData?.image ? userData.image : UserImage}
               />
             </div>
@@ -77,13 +78,9 @@ function AdminDashboard() {
               </tbody>
             </table>
           </div>
-          <div className="col-md-8 p-2">
-            <h1 className="mb-3 text-center">Welcome Admin</h1>
+          <div className="col-md-6 p-2">
             <div className="row align-items-center mt-5">
-              <div className="col-md-6 d-flex justify-content-center">
-                <Clock />
-              </div>
-              <div className="col-md-6">
+              <div className="col-md-12">
                 {isLoading ? (
                   <Spiner />
                 ) : (
