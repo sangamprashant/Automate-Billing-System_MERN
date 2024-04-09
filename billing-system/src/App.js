@@ -17,6 +17,8 @@ import {
   Welcome,
 } from "./component";
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { AppContext } from "./AppContext";
 import { fetchUserData, handleGetCategory } from "./apiCalls";
 
@@ -84,7 +86,7 @@ function App() {
         </Routes>
       ) : (
         <>
-          <Loading /> 
+          <Loading />
           <Routes>
             <Route path="/" element={<Welcome />} />
             {/* bill */}
@@ -102,6 +104,7 @@ function App() {
           </Routes>
         </>
       )}
+      <ToastContainer theme="dark" />
     </AppContext.Provider>
   );
 }
