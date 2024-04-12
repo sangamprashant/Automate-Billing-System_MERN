@@ -127,6 +127,7 @@ function AddOperator({setFrame}) {
 
       if (responseData.success) {
         message.success("Registered successfully");
+        setFrame("all")
       } else {
         throw new Error(responseData.error || "Something went wrong");
       }
