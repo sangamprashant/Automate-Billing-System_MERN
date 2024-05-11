@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import QRCode from "qrcode.react";
 import "./Bill.css";
 import { AppContext } from "../../AppContext";
+import { BannerImg } from "../../assets/image";
 
 function Bill() {
   const { userData } = useContext(AppContext);
@@ -46,6 +47,9 @@ function Bill() {
             </button>
           )}
           <div className="mt-5">
+            <center>
+              <img src={BannerImg} alt="" height={80} />
+            </center>
             <hr className="bill-boundary" />
             <h1 className="text-dark-blue bill-heading mb-4">
               <b>INVOICE</b>
@@ -54,13 +58,7 @@ function Bill() {
           <div className="d-flex justify-content-between">
             {/* company side */}
             <div>
-              <th>BILLING SYSTEM</th>
-
               <i>
-                {" "}
-                <div>Tiwariganj, Lucknow</div>
-                <div>email.example.com</div>
-                <div className="mb-3">{process.env.REACT_APP_BASE_URL}</div>
                 {currentURL && (
                   <QRCode value={currentURL} className="bg-transparent" />
                 )}

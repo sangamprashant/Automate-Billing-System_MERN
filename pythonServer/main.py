@@ -39,6 +39,7 @@ def register_user():
         email = request.form.get("email")
         name = request.form.get("name")
         password = request.form.get("password")
+        imageURL = request.form.get("imageURL")
         face_photo = request.files.get("face_photo")
 
         # Validate data
@@ -70,7 +71,7 @@ def register_user():
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
         # Save user data to database
-        user_data = {"email": email, "name": name, "password": hashed_password, "isAdmin": False, "face_encoding": face_encoding.tolist()}
+        user_data = {"email": email, "name": name, "password": hashed_password, "isAdmin": False, "image":imageURL, "face_encoding": face_encoding.tolist()}
         result = users_collection.insert_one(user_data)
         
         return jsonify({"message": "User registered successfully", "success" : True ,})

@@ -10,7 +10,7 @@ function AdminOperators() {
   const [frame, setFrame] = React.useState("all");
   const [tableData, setTableData] = React.useState([]);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     fetchOperators();
   }, []);
 
@@ -35,7 +35,7 @@ function AdminOperators() {
       case "all":
         return <AllOperators tableData={tableData} />;
       case "add":
-        return <AddOperator setFrame={setFrame}/>;
+        return <AddOperator setFrame={setFrame} fetchOperators={fetchOperators}/>;
       default:
         return <AllOperators tableData={tableData} />;
     }

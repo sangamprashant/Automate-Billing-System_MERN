@@ -2,6 +2,8 @@ import React from "react";
 import { UserImage } from "../../../assets/image";
 import Webcam from "react-webcam";
 import { Tooltip, message } from "antd";
+import { storage } from "../../../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   CameraIcon,
   CheckIcon,
@@ -13,8 +15,8 @@ import "./Operators.css";
 import axios from "axios";
 import { AppContext } from "../../../AppContext";
 
-function AddOperator({setFrame}) {
-  const {setIsLoading} = React.useContext(AppContext)
+function AddOperator({ setFrame, fetchOperators }) {
+  const { setIsLoading } = React.useContext(AppContext);
   const [imagePreview, setImagePreview] = React.useState(null);
   const [selectImage, setSelectedImage] = React.useState(null);
   const [isCameraOpen, setCameraOpen] = React.useState(false);
@@ -25,7 +27,7 @@ function AddOperator({setFrame}) {
   const [password, setPassword] = React.useState("");
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const [foundEmail,setFoundEmail] = React.useState(true)
+  const [foundEmail, setFoundEmail] = React.useState(true);
 
   const webcamRef = React.useRef(null);
 
@@ -73,12 +75,12 @@ function AddOperator({setFrame}) {
   };
 
   React.useEffect(() => {
-      checkEmail();
+    checkEmail();
   }, [email]);
   const checkEmail = async () => {
-    setFoundEmail(true)
-    if(!isEmailValid){
-      return 
+    setFoundEmail(true);
+    if (!isEmailValid) {
+      return;
     }
     try {
       const response = await axios.post(
@@ -89,7 +91,7 @@ function AddOperator({setFrame}) {
       );
       if (response.data.success) {
         message.success(response.data.message || "proceed");
-        setFoundEmail(false)
+        setFoundEmail(false);
       } else {
         message.warning(response.data.message || "proceed");
       }
@@ -102,41 +104,47 @@ function AddOperator({setFrame}) {
     if (!email.trim() || !name.trim() || !selectImage || !password.trim()) {
       return message.warning("All fielde are required");
     }
-    if(foundEmail){
-      return message.warning("Email already used.")
+    if (foundEmail) {
+      return message.warning("Email already used.");
     }
-
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
+      const storageRef = ref(storage, `operator_images/${selectImage.name}`);
+      await uploadBytes(storageRef, selectImage);
+      const imageURL = await getDownloadURL(storageRef);
+
       const formData = new FormData();
       formData.append("email", email);
       formData.append("name", name);
       formData.append("password", password);
+      formData.append("imageURL", imageURL);
       formData.append("face_photo", selectImage);
 
-      // console.log("form send: ", formData);
-
-      const response = await fetch(`${process.env.REACT_APP_PYTHON_SERVER}/api/register`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_PYTHON_SERVER}/api/register`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const responseData = await response.json();
       // console.log("response:", responseData);
 
       if (responseData.success) {
         message.success("Registered successfully");
-        setFrame("all")
+        fetchOperators();
+        setFrame("all");
       } else {
         throw new Error(responseData.error || "Something went wrong");
       }
     } catch (error) {
+      console.log({error})
       message.error(error.message || "Something went wrong");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-    
   };
 
   return (
@@ -153,7 +161,9 @@ function AddOperator({setFrame}) {
                   id="operatorName"
                   name="name"
                   placeholder="Name"
-                  className={`form-control border-3 border-${name.trim()?"success":"danger"}`}
+                  className={`form-control border-3 border-${
+                    name.trim() ? "success" : "danger"
+                  }`}
                   value={name}
                   onChange={(e) => {
                     setName(e.target.value);
@@ -171,7 +181,13 @@ function AddOperator({setFrame}) {
                   id="operatorEmail"
                   name="email"
                   placeholder="Email"
-                  className={`form-control border-3 border-${(!foundEmail)?"success":isEmailValid && foundEmail?"warning":"danger"}`}
+                  className={`form-control border-3 border-${
+                    !foundEmail
+                      ? "success"
+                      : isEmailValid && foundEmail
+                      ? "warning"
+                      : "danger"
+                  }`}
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -189,7 +205,9 @@ function AddOperator({setFrame}) {
                   id="operatorName"
                   name="password"
                   placeholder="Password"
-                  className={`form-control border-3 border-${password.trim()?"success":"danger"}`}
+                  className={`form-control border-3 border-${
+                    password.trim() ? "success" : "danger"
+                  }`}
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
@@ -249,12 +267,16 @@ function AddOperator({setFrame}) {
           <Tooltip title="Please enroll a face for authentication.">
             <button
               type="button"
-              className={`btn btn-${(!foundEmail && name.trim() && selectImage ) ? "success" : "danger"}`}
+              className={`btn btn-${
+                !foundEmail && name.trim() && selectImage ? "success" : "danger"
+              }`}
               onClick={handelRegister}
-              disabled={(foundEmail || !name.trim() || !selectImage || !password.trim())}
+              // disabled={(foundEmail || !name.trim() || !selectImage || !password.trim())}
             >
               <FaceRetouchingNaturalIcon />{" "}
-              {(!foundEmail && name.trim() && selectImage & password.trim() ) ? "Click to enroll " : "All fields are required"}
+              {!foundEmail && name.trim() && selectImage & password.trim()
+                ? "Click to enroll "
+                : "All fields are required"}
             </button>
           </Tooltip>
         </div>
