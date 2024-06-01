@@ -46,7 +46,7 @@ function Login() {
   useEffect(() => {
     if (countdown === 0) {
       // TODO: niche vala abhi un comment kena hai
-      // HandleWebCam();
+      HandleWebCam();
     }
   }, [countdown]);
 
@@ -110,7 +110,7 @@ function Login() {
   };
 
   const handleRegister = async (imgeBlob) => {
-    setLoading(true);
+    setIsLoading(true);
     setModelRegister(false);
     setIsLoading(true);
     try {
@@ -142,7 +142,7 @@ function Login() {
       message.error(error.message || "Something went wrong");
     } finally {
       setIsLoading(false);
-      setLoading(false);
+      setIsLoading(false);
       setCapturedImage(null);
     }
   };
@@ -191,49 +191,51 @@ function Login() {
   };
 
   return (
-    <div className="main-container">
+    <div className="main-container overflow-y-scroll">
       <div className="d-flex justify-content-center align-items-center flex-column">
-        <h2 className="text-center mb-3">
-          WELCOME TO <br /> OUR AUTOMATIC BILLING SYSTEM
-        </h2>
-        <form className="bg-lucent-mirror border shadow p-5 col-md-7">
-          <div className="row align-items-center">
-            <div className="col-md-4">
-              <img src={BannerImg} width="100%" alt="Banner" />
+        <div className="bg-lucent-mirror border shadow p-5 col-md-7">
+          <form className="">
+            <h2 className="text-center mb-3">
+              WELCOME TO <br /> OUR AUTOMATIC BILLING SYSTEM
+            </h2>
+            <div className="row align-items-center">
+              <div className="col-md-4">
+                <img src={BannerImg} width="100%" alt="Banner" />
+              </div>
+              <div className="col-md-8">
+                <ul>
+                  <li>
+                    Automated face authentication and QR scanner for seamless
+                    payments.
+                  </li>
+                  <li>
+                    Integration with Razorpay for quick and efficient
+                    transactions.
+                  </li>
+                  <li>
+                    Real-time bills sent via email and SMS for your convenience.
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div className="col-md-8">
-              <ul>
-                <li>
-                  Automated face authentication and QR scanner for seamless
-                  payments.
-                </li>
-                <li>
-                  Integration with Razorpay for quick and efficient
-                  transactions.
-                </li>
-                <li>
-                  Real-time bills sent via email and SMS for your convenience.
-                </li>
-              </ul>
-            </div>
-          </div>
 
-          <hr className="line-bold" />
-          <div className="d-flex justify-content-center">
-            <button
-              type="button"
-              className="shadow btn btn-primary p-3 "
-              onClick={HandleWebCam}
-            >
-              <SensorOccupiedIcon />
-            </button>
-          </div>
-          <p className="text-center text-success">
-            Opening the face recognition window in {countdown} seconds...
-          </p>
-          <hr />
+            <hr className="line-bold" />
+            <div className="d-flex justify-content-center">
+              <button
+                type="button"
+                className="shadow btn btn-primary p-3 "
+                onClick={HandleWebCam}
+              >
+                <SensorOccupiedIcon />
+              </button>
+            </div>
+            <p className="text-center text-success">
+              Opening the face recognition window in {countdown} seconds...
+            </p>
+            <hr />
+          </form>
           <LoginEmailForm />
-        </form>
+        </div>
       </div>
       <Modal isOpen={modelRegister} onClose={() => setModelRegister(false)}>
         <>

@@ -30,24 +30,30 @@ const emailCheck = async (req, res) => {
 // login callback
 const loginController = async (req, res) => {
   try {
-    const user = await userModel.findOne({ email: req.body.email });
+    const { password, email } = req.body;
+    if (!email.trim() || !password.trim())
+      return res
+        .status(400)
+        .send({ message: "All fields are required.", success: false });
+
+    const user = await userModel.findOne({ email });
     if (!user) {
       return res
-        .status(200)
-        .send({ message: "user not found", success: false });
+        .status(400)
+        .send({ message: "No user found with this email", success: false });
     }
-    const isMatch = await bcrypt.compare(req.body.faceId, user.faceId);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res
-        .status(200)
-        .send({ message: "Invlid EMail or Password", success: false });
+        .status(400)
+        .send({ message: "Invlid Email or Password", success: false });
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({user:{ _id: user._id }}, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
     res.status(200).send({ message: "Login Success", success: true, token });
   } catch (error) {
-    console.log(error);
+    console.log({ error });
     res.status(500).send({ message: `Error in Login CTRL ${error.message}` });
   }
 };
