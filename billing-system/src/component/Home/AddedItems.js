@@ -3,7 +3,7 @@ import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
 import AddIcon from "@mui/icons-material/Add";
 import RedoIcon from "@mui/icons-material/Redo";
-import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
+import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import UndoIcon from "@mui/icons-material/Undo";
 import SearchIcon from "@mui/icons-material/Search";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
@@ -12,11 +12,12 @@ import { SearchOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../AppContext";
 import Scanner from "./Scanner";
+import { Link } from "react-router-dom";
 
-function AddedItems({ 
-  selectedProducts, 
-  handleUndo, 
-  handleRedo, 
+function AddedItems({
+  selectedProducts,
+  handleUndo,
+  handleRedo,
   handleReset,
   discountPercentagePerUnit,
   setDiscountPercentagePerUnit,
@@ -24,15 +25,15 @@ function AddedItems({
   setDiscountAmountPerUnit,
   totalDiscountGivenInOverall,
   setTotalDiscountGivenInOverall,
-  calculatedTotalDiscountOfAllDiscount ,
+  calculatedTotalDiscountOfAllDiscount,
   setCalculatedTotalDiscountOfAllDiscount,
   selectItemsTotal,
   setSelectItemsTotal,
-  qtyCount ,
+  qtyCount,
   setQtyCount,
   setIsScannerOpen,
 }) {
-  const { isLogged, setIsLogged, goToPayment, setGoToPayment } =
+  const { isLogged, setIsLogged, goToPayment, setGoToPayment, userData } =
     useContext(AppContext);
 
   const handlePositiveNumberChange = (inputValue, setterFunction) => {
@@ -41,8 +42,11 @@ function AddedItems({
     } else {
       const numericValue = parseFloat(inputValue);
       if (!isNaN(numericValue) && numericValue >= 0) {
-        if (selectItemsTotal <= (calculatedTotalDiscountOfAllDiscount+numericValue)) {
-          setterFunction(0)
+        if (
+          selectItemsTotal <=
+          calculatedTotalDiscountOfAllDiscount + numericValue
+        ) {
+          setterFunction(0);
           message.error("Discount can't be more than total price");
         } else {
           setterFunction(numericValue);
@@ -74,18 +78,24 @@ function AddedItems({
     let itemsTotal = 0.0;
     let QuantityCount = 0;
     selectedProducts.forEach((product) => {
-      const discountPerUnit = product.p_total * (discountPercentagePerUnit / 100);
+      const discountPerUnit =
+        product.p_total * (discountPercentagePerUnit / 100);
       totalDiscount += discountPerUnit;
       itemsTotal += product.p_total;
       QuantityCount += product.p_count;
     });
-  
+
     totalDiscount += selectedProducts.length * Number(discountAmountPerUnit);
     totalDiscount += Number(totalDiscountGivenInOverall);
     setCalculatedTotalDiscountOfAllDiscount(totalDiscount);
     setSelectItemsTotal(itemsTotal);
     setQtyCount(QuantityCount);
-  }, [selectedProducts, discountPercentagePerUnit, discountAmountPerUnit, totalDiscountGivenInOverall]);
+  }, [
+    selectedProducts,
+    discountPercentagePerUnit,
+    discountAmountPerUnit,
+    totalDiscountGivenInOverall,
+  ]);
 
   return (
     <div className="home-main item-section">
@@ -106,7 +116,9 @@ function AddedItems({
                 />
               </td>
               <td>
-                <strong className=" text-nowrap text-primary">Dics Amt PU:</strong>
+                <strong className=" text-nowrap text-primary">
+                  Dics Amt PU:
+                </strong>
                 <input
                   className="form-control bg-warning-subtle "
                   type="number"
@@ -117,7 +129,9 @@ function AddedItems({
                 />
               </td>
               <td>
-                <strong className=" text-nowrap text-primary">Overall Disc Amt:</strong>
+                <strong className=" text-nowrap text-primary">
+                  Overall Disc Amt:
+                </strong>
                 <input
                   className="form-control bg-warning-subtle"
                   placeholder="0.00"
@@ -128,7 +142,9 @@ function AddedItems({
                 />
               </td>
               <td>
-                <strong className=" text-nowrap text-primary">Total Disc Amount:</strong>
+                <strong className=" text-nowrap text-primary">
+                  Total Disc Amount:
+                </strong>
                 <input
                   className="form-control bg-warning-subtle "
                   placeholder="0.00"
@@ -142,13 +158,20 @@ function AddedItems({
         <div className="d-flex justify-content-end">
           {/* buttons */}
           <Space size={[8, 16]} wrap className="justify-content-center">
+            {userData?.isAdmin && (
+              <Tooltip title="Back to Admin Dashboard" onClick={handleReset}>
+                <Link className="btn btn-primary" to="/admin/dashboard">
+                  Admin Dashboard
+                </Link>
+              </Tooltip>
+            )}
             <Tooltip title="Reset the billing items" onClick={handleReset}>
-              <button className="btn btn-primary" disabled={goToPayment} >
+              <button className="btn btn-primary" disabled={goToPayment}>
                 Reset
               </button>
             </Tooltip>
             <Tooltip title="Undo" onClick={handleUndo}>
-              <button className="btn btn-primary" disabled={goToPayment} >
+              <button className="btn btn-primary" disabled={goToPayment}>
                 <UndoIcon />
               </button>
             </Tooltip>
@@ -158,10 +181,14 @@ function AddedItems({
               </button>
             </Tooltip> */}
             <Tooltip title="Scan a product">
-                <button className="btn btn-primary" disabled={goToPayment} onClick={()=>setIsScannerOpen(true)}>
-                  <QrCodeScannerIcon />
-                </button>
-              </Tooltip>
+              <button
+                className="btn btn-primary"
+                disabled={goToPayment}
+                onClick={() => setIsScannerOpen(true)}
+              >
+                <QrCodeScannerIcon />
+              </button>
+            </Tooltip>
           </Space>
         </div>
       </div>
@@ -218,9 +245,14 @@ function AddedItems({
               </td>
               <td className="box-cell-bottom shadow">{qtyCount}</td>
               <td className="box-cell-bottom shadow">
-              ₹{selectItemsTotal.toFixed(2)}
+                ₹{selectItemsTotal.toFixed(2)}
               </td>
-              <td className="box-cell-bottom shadow">₹{(selectItemsTotal - calculatedTotalDiscountOfAllDiscount).toFixed(2)}</td>
+              <td className="box-cell-bottom shadow">
+                ₹
+                {(
+                  selectItemsTotal - calculatedTotalDiscountOfAllDiscount
+                ).toFixed(2)}
+              </td>
             </tr>
           </tbody>
         </table>

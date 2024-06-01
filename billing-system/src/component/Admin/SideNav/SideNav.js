@@ -13,6 +13,7 @@ import {
   LocalOfferIcon,
   PersonIcon,
   ShoppingCartOutlinedIcon,
+  StorefrontIcon,
 } from "../../../assets/icons";
 
 function SideNav({ children }) {
@@ -40,7 +41,13 @@ function SideNav({ children }) {
       label: "orders",
       path: "/admin/orders",
       icon: <LocalOfferIcon />,
-    },    {
+    },
+    {
+      label: "Store",
+      path: "/store",
+      icon: <StorefrontIcon />,
+    },
+    {
       label: "Profile",
       path: "/admin/profile",
       icon: <PersonIcon />,
@@ -67,12 +74,12 @@ function SideNav({ children }) {
           isSidebarOpen ? "sidebar-open" : "small"
         }`}
       >
-        <Link className="sidenav-item  rounded-3 border-3  d-flex justify-content-start text-dark py-4 align-items-center">
+        <div  className="sidenav-item  rounded-3 border-3  d-flex justify-content-start text-dark py-3 align-items-center">
           <ShoppingCartOutlinedIcon stroke="#8e19c7" size="20px" />
           {isSidebarOpen && (
             <b style={{ color: "#8e19c7", fontSize: "20px" }}>Dashbord</b>
           )}
-        </Link>
+        </div>
         <div className="d-flex justify-content-center flex-column gap-4">
           <Link
             className={`sidenav-item shadow rounded-3 border-3 ${

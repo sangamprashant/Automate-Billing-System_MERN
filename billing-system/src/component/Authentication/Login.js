@@ -1,5 +1,6 @@
 import { message } from "antd";
 import React, { useContext, useEffect, useState } from "react";
+import SensorOccupiedIcon from "@mui/icons-material/SensorOccupied";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
@@ -10,6 +11,7 @@ import html2canvas from "html2canvas";
 import * as faceapi from "face-api.js";
 import { toast } from "react-toastify";
 import Modal from "../Modal";
+import LoginEmailForm from "./LoginEmailForm";
 
 function Login() {
   const { token, setToken, isLogged, setIsLogged, setIsLoading } =
@@ -43,8 +45,8 @@ function Login() {
 
   useEffect(() => {
     if (countdown === 0) {
-      // Start face recognition when countdown reaches 0
-      HandleWebCam();
+      // TODO: niche vala abhi un comment kena hai
+      // HandleWebCam();
     }
   }, [countdown]);
 
@@ -190,47 +192,49 @@ function Login() {
 
   return (
     <div className="main-container">
-      <form className="form bg-lucent-mirror border shadow p-5 col-md-7">
+      <div className="d-flex justify-content-center align-items-center flex-column">
         <h2 className="text-center mb-3">
           WELCOME TO <br /> OUR AUTOMATIC BILLING SYSTEM
         </h2>
-        <div className="row align-items-center">
-          <div className="col-md-4">
-            <img src={BannerImg} width="100%" alt="Banner" />
+        <form className="bg-lucent-mirror border shadow p-5 col-md-7">
+          <div className="row align-items-center">
+            <div className="col-md-4">
+              <img src={BannerImg} width="100%" alt="Banner" />
+            </div>
+            <div className="col-md-8">
+              <ul>
+                <li>
+                  Automated face authentication and QR scanner for seamless
+                  payments.
+                </li>
+                <li>
+                  Integration with Razorpay for quick and efficient
+                  transactions.
+                </li>
+                <li>
+                  Real-time bills sent via email and SMS for your convenience.
+                </li>
+              </ul>
+            </div>
           </div>
-          <div className="col-md-8">
-            <ul>
-              <li>
-                Revolutionizing billing systems with MERN, faceIO, Firebase, and
-                Twilio.
-              </li>
-              <li>
-                Automated face authentication and QR scanner for seamless
-                payments.
-              </li>
-              <li>
-                Integration with Razorpay for quick and efficient transactions.
-              </li>
-              <li>
-                Real-time bills sent via email and SMS for your convenience.
-              </li>
-            </ul>
+
+          <hr className="line-bold" />
+          <div className="d-flex justify-content-center">
+            <button
+              type="button"
+              className="shadow btn btn-primary p-3 "
+              onClick={HandleWebCam}
+            >
+              <SensorOccupiedIcon />
+            </button>
           </div>
-        </div>
-        <hr className="line-bold" />
-        <p className="text-center text-success">
-          Opening the face recognition window in {countdown} seconds...
-        </p>
-        <div className="d-flex justify-content-end">
-          <button
-            type="button"
-            className="shadow btn btn-primary px-5 mt-4"
-            onClick={HandleWebCam}
-          >
-            Login
-          </button>
-        </div>
-      </form>
+          <p className="text-center text-success">
+            Opening the face recognition window in {countdown} seconds...
+          </p>
+          <hr />
+          <LoginEmailForm />
+        </form>
+      </div>
       <Modal isOpen={modelRegister} onClose={() => setModelRegister(false)}>
         <>
           <h2>Webcam Scanner</h2>
@@ -256,9 +260,9 @@ function Login() {
             </div>
           )}
           <div className="d-flex justify-content-around mt-2">
-          <button
+            <button
               key="3"
-              className={`btn btn-${isFacedetected?"success":"danger"} m-1`}
+              className={`btn btn-${isFacedetected ? "success" : "danger"} m-1`}
               onClick={handleScreenshotButtonClick}
             >
               SIGNIN

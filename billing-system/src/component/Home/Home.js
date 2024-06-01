@@ -1,30 +1,23 @@
-import React, { useContext, useEffect, useState } from "react";
-import "./Home.css";
-import ProductSection from "./ProductSection";
-import ButtonSection from "./ButtonSection";
-import AddedItems from "./AddedItems";
-import Payment from "./Payment";
-import { AppContext } from "../../AppContext";
 import { message } from "antd";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../AppContext";
+import AddedItems from "./AddedItems";
+import ButtonSection from "./ButtonSection";
+import "./Home.css";
+import Payment from "./Payment";
+import ProductSection from "./ProductSection";
 import Scanner from "./Scanner";
 
 function Home() {
   const navigate = useNavigate()
   const {
     token,
-    setToken,
-    isLogged,
-    setIsLogged,
     goToPayment,
     setGoToPayment,
-    isLoading,
-    setIsLoading,
     userData,
-    setUserData,
     categories,
-    setCategories,
   } = useContext(AppContext);
   const [categorySelected, setCategorySelected] = useState("");
   const [productByCategory, setProductByCategory] = useState([]);

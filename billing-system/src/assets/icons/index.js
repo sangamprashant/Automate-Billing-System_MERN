@@ -12,6 +12,7 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import StorefrontIcon from '@mui/icons-material/Storefront';
 
 export {
   AssignmentIndIcon,
@@ -27,5 +28,6 @@ export {
   DeleteIcon,
   ShoppingCartOutlinedIcon,
   EditIcon,
+  StorefrontIcon,
   LocalOfferIcon,
 };
